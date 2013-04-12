@@ -4,3 +4,9 @@
 *.jar
 *.war
 *.ear
+*.class
+*.classpath
+*.iml
+*.xml
+*.name
+*.MF
