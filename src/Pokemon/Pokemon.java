@@ -6,7 +6,59 @@ import java.util.Random;
 public enum Pokemon
 {
 
-    BULBASAUR("Bulbasaur", new int[]{1,1,1,1,1,1,1,1}, false, Type.GRASS, Type.POISON);
+    BULBASAUR("Bulbasaur", 1, 45, new int[]{49,49,65,65,45,45}, false, Type.GRASS, Type.POISON),
+    IVYSAUR("IVYSAUR", 2, 45,  new int[]{62,63,80,80,60,60}, false, Type.GRASS, Type.POISON),
+    VENASAUR("Venasaur", 3, 45, new int[]{82,83,100,100,80,80}, false, Type.GRASS, Type.POISON),
+    CHARMANDER("Charmander", 4, 45, new int[]{52,43,60,50,65,39}, false, Type.FIRE),
+    CHARMELEON("Charmeleon", 5, 45, new int[]{64,58,80,65,80,58}, false, Type.FIRE),
+    CHARIZARD("Charizard", 6, 45, new int[]{84,78,109,85,100,78}, false, Type.FIRE, Type.FLYING),
+    SQUIRTLE("Squirtle", 7, 45, new int[]{48,65,50,64,43,44}, false, Type.WATER),
+    WARTORTLE("Wartortle", 8, 45, new int[]{63,80,65,80,58,59}, false, Type.WATER),
+    BLASTOISE("Blastoise", 9, 45, new int[]{83,100,85,105,78,79}, false, Type.WATER),
+    CATERPIE("Caterpie", 10, 255, new int[]{30,35,20,20,45,45}, false, Type.BUG),
+    METAPOD("Metapod", 11, 120, new int[]{20,55,25,25,30,50}, false, Type.BUG),
+    BUTTERFREE("Butterfree", 12, 45, new int[]{45,50,80,80,70,60}, false, Type.BUG, Type.FLYING),
+    WEEDLE("Weedle", 13, 255, new int[]{35,30,20,20,50,40}, false, Type.BUG, Type.POISON),
+    KAKUNA("Kakuna", 14, 120, new int[]{25,50,25,25,35,45}, false, Type.BUG, Type.POISON),
+    BEEDRILL("Beedrill", 15, 45, new int[]{80,40,45,80,75,65}, false, Type.BUG, Type.POISON),
+    PIDGEY("Pidgey", 16, 255, new int[]{45,40,35,35,56,40}, false, Type.NORMAL, Type.FLYING),
+    PIDGEOTTO("Pidgeotto", 17, 120, new int[]{60,55,50,50,71,63}, false, Type.NORMAL, Type.FLYING),
+    PIDGEOT("Pidgeot", 18, 45, new int[]{80,75,70,70,91,83}, false, Type.NORMAL, Type.FLYING),
+    RATTATA("Rattata", 19, 255, new int[]{56,35,25,35,72,30}, false, Type.NORMAL),
+    RATICATE("Raticate", 20, 127, new int[]{81,60,50,70,97,55}, false, Type.NORMAL),
+    SPEAROW("Spearow", 21, 255, new int[]{60,30,31,31,70,40}, false, Type.NORMAL, Type.FLYING),
+    FEAROW("Fearow", 22, 90, new int[]{90,65,61,61,100,65}, false, Type.NORMAL, Type.FLYING),
+    EKANS("Ekans", 23, 255, new int[]{60,44,40,54,55,35}, false, Type.POISON),
+    ARBOK("Arbok", 24, 90, new int[]{85,69,65,79,80,60}, false, Type.POISON),
+    PIKACHU("Pikachu", 25, 190, new int[]{55,30,50,40,90,60}, false, Type.ELECTRIC),
+    RAICHU("Raichu", 26, 75, new int[]{90,55,90,80,100,60}, false, Type.ELECTRIC),
+    SANDSHREW("Sandshrew", 27, 255, new int[]{75,85,20,30,40,50}, false, Type.GROUND),
+    SANDSLASH("Sandslash", 28, 90, new int[]{100,110,45,55,65,75}, false, Type.GROUND),
+    NIDORAN_FEMALE("Nidoran" + '\u2640', 29, 235, new int[]{47,52,40,40,41,55}, false, Type.POISON),
+    NIDORINA("Nidorina", 30, 120, new int[]{62,67,55,55,56,70}, false, Type.POISON),
+    NIDOQUEEN("Nidoqueen", 31, 45, new int[]{82,87,75,85,76,90}, false, Type.POISON, Type.GROUND),
+    NIDORAN_MALE("Nidoran" + '\u2642', 32, 235, new int[]{57,40,40,40,50,46}, false, Type.POISON),
+    NIDORINO("Nidorino", 33, 120, new int[]{72,57,55,55,65,61}, false, Type.POISON),
+    NIDOKING("Nidoking", 34, 45, new int[]{92,77,85,75,85,81}, false, Type.POISON, Type.GROUND),
+    CLEFAIRY("Clefairy", 35, 150, new int[]{45,48,60,65,35,70}, false, Type.NORMAL),
+    CLEFABLE("Clefable", 36, 25, new int[]{70,73,85,90,60,95}, false, Type.NORMAL),
+    VULPIX("Vulpix", 37, 190, new int[]{41,40,50,65,65,38}, false, Type.FIRE),
+    NINETAILS("Ninetails", 38, 75, new int[]{76,75,81,100,100,73}, false, Type.FIRE),
+    JIGGLYPUFF("Jigglypuff", 39, 170, new int[]{45,20,45,25,20,115}, false, Type.NORMAL),
+    WIGGLYTUFF("Wigglytuff", 40, 50, new int[]{70,45,75,50,45,140}, false, Type.NORMAL),
+    ZUBAT("Zubat", 41, 255, new int[]{45,35,30,40,55,40}, false, Type.POISON, Type.FLYING),
+    GOLBAT("Golbat", 42, 90, new int[]{80,70,65,75,90,75}, false, Type.POISON, Type.FLYING),
+    ODDISH("Oddish", 43, 255, new int[]{50,55,75,65,30,45}, false, Type.GRASS, Type.POISON),
+    GLOOM("Gloom", 44, 120, new int[]{65,70,85,75,40,60}, false, Type.GRASS, Type.POISON),
+    VILEPLUME("Vileplume", 45, 45, new int[]{80,85,100,90,50,75}, false, Type.GRASS, Type.POISON),
+    PARAS("Paras", 46, 190, new int[]{70,55,45,55,25,35}, false, Type.BUG, Type.POISON),
+    PARASECT("Parasect", 47, 75, new int[]{95,80,60,80,30,60}, false, Type.BUG, Type.POISON),
+    VENONAT("Venonat", 48, 190, new int[]{55,50,40,55,45,60}, false, Type.BUG, Type.POISON),
+    VENOMOTH("Venomoth", 49, 75, new int[]{65,60,90,75,90,70}, false, Type.BUG, Type.POISON),
+    DIGLETT("Diglett", 50, 255, new int[]{55,25,35,45,95,10}, false, Type.GROUND),
+    DUGTRIO("Dugtrio", 51, 50, new int[]{80,50,50,70,120,35}, false, Type.GROUND),
+    MEOWTH("Meowth", 52, 255, new int[]{45,35,40,40,90,40}, false, Type.NORMAL);
+
 
     private final int[] BASE_STATS;
     private final Type[] TYPE;
@@ -23,8 +75,8 @@ public enum Pokemon
             BURNED = 2, 
             FROZEN = 3, 
             ASLEEP = 4, 
-            SEEDED = 5,
-            CATCH_RATE;
+            SEEDED = 5;
+    private final int CATCH_RATE, NAT_DEX_NUMBER;
     private final boolean WILD;
     //Poison, Paralyze, Burn, Frozen, Asleep, Seeded
     private boolean[] status;
@@ -35,7 +87,7 @@ public enum Pokemon
     private int[] currentStats, inBattleStats, ivs, evs;
     private Move[] moveSet;
     
-    Pokemon(String name, int[] stats, boolean wild, final Type... type)
+    Pokemon(String name, final int dexNumber, final int catchRate, int[] stats, boolean wild, final Type... type)
     {
         if(type.length > 2)
         {
@@ -67,7 +119,8 @@ public enum Pokemon
         calculateStat(HP)};        
         
         System.arraycopy(currentStats, 0, inBattleStats, 0, currentStats.length);
-        CATCH_RATE = 255;//Dependent on the Pokemon
+        CATCH_RATE = catchRate;//Dependent on the Pokemon
+        NAT_DEX_NUMBER = dexNumber;
         ivs = new int[6];
         level = 5;
         totalExpForNextLevel = (4 * (int)Math.pow(level + 1, 3)) / 5;
