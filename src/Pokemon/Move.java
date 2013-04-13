@@ -24,7 +24,8 @@ public enum Move
     
     private String NAME;
     private final Type TYPE;
-    private int POWER, pp, currentPP, currentPower, ACCURACY;
+    private final int POWER, ACCURACY;
+    private int pp, currentPP, currentPower, currentAccuracy;
     private final Status SIDE_EFFECT;
     private final Stat STAT_LOWERED;
 
@@ -111,7 +112,12 @@ public enum Move
     {
         currentPP += PP;
     }
-    
+
+    public void resetAccuracy()
+    {
+        currentAccuracy = ACCURACY;
+    }
+
     public void resetPP()
     {
         currentPP = pp;
@@ -121,7 +127,7 @@ public enum Move
     {
         return NAME;
     }
-    
+
     public Type getType()
     {
         return TYPE;
