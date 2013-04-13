@@ -32,7 +32,7 @@ public enum Pokemon
     private short level;
     private int totalExpForNextLevel, totalExp;
     //Attack, Defense, Sp. Attack, Sp. Defense, Speed, HP
-    private int[] calculatedStats, currentStats, ivs, evs;
+    private int[] currentStats, inBattleStats, ivs, evs;
     private Move[] moveSet;
     
     Pokemon(String name, int[] stats, boolean wild, final Type... type)
@@ -58,7 +58,7 @@ public enum Pokemon
         }
         
         evs = new int[] {0, 0, 0, 0, 0, 0};
-        calculatedStats = new int[]{
+        currentStats = new int[]{
         calculateStat(ATTACK),
         calculateStat(DEFENSE),
         calculateStat(SP_ATTACK),
@@ -66,7 +66,7 @@ public enum Pokemon
         calculateStat(SPEED),
         calculateStat(HP)};        
         
-        System.arraycopy(calculatedStats, 0, currentStats, 0, calculatedStats.length);
+        System.arraycopy(currentStats, 0, inBattleStats, 0, currentStats.length);
         CATCH_RATE = 255;//Dependent on the Pokemon
         ivs = new int[6];
         level = 5;
@@ -77,32 +77,6 @@ public enum Pokemon
         NAME = name;
         TYPE = type;
         WILD = wild;
-    }
-    
-    Pokemon(Pokemon p)
-    {
-        NAME = p.NAME;
-        level = p.level;
-        TYPE = p.TYPE;
-        
-        evs = p.evs;
-        ivs = p.ivs;
-        BASE_STATS = p.BASE_STATS;
-        
-        for(int i = ATTACK; i <= HP; i++)
-        {
-            calculatedStats[i] = calculateStat(i);
-        }
-        
-        CATCH_RATE = p.CATCH_RATE;
-        WILD = p.WILD;
-        
-        totalExp = p.totalExp;
-        totalExpForNextLevel = (4 * (int)Math.pow(level + 1, 3)) / 5;
-        
-        status = p.status;
-        moveSet = p.moveSet;
-        
     }
     
     /**
@@ -116,6 +90,11 @@ public enum Pokemon
         return BASE_STATS[stat];
     }
     
+    public int getInBattleStat(final int stat) throws ArrayIndexOutOfBoundsException
+    {
+        return inBattleStats[stat];
+    }
+
     public int getCurrentStat(final int stat) throws ArrayIndexOutOfBoundsException
     {
         return currentStats[stat];
@@ -166,8 +145,8 @@ public enum Pokemon
     {
         /*
         //Fix up this method to make it more visually appealing
-        int a = p.getLevel(), b = p.getCurrentStat(ATTACK), c = m.power(), 
-                d = currentStats[DEFENSE], x = 1, z = new Random().nextInt(38) + 217, 
+        int a = p.getLevel(), b = p.getInBattleStat(ATTACK), c = m.power(),
+                d = inBattleStats[DEFENSE], x = 1, z = new Random().nextInt(38) + 217,
                 y = superEffective(m), value;
         
 
@@ -230,7 +209,7 @@ public enum Pokemon
      */
     public void resetStats()
     {
-        System.arraycopy(calculatedStats, 0, currentStats, 0, BASE_STATS.length);
+        System.arraycopy(currentStats, 0, inBattleStats, 0, BASE_STATS.length);
     }
     
     /**
@@ -238,9 +217,9 @@ public enum Pokemon
      * 
      * @return current health
      */
-    public int getCurrentHp()
+    public int getInBattleHp()
     {
-        return currentStats[HP];
+        return inBattleStats[HP];
     }
     
     /**
