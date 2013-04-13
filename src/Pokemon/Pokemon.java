@@ -57,7 +57,10 @@ public enum Pokemon
     VENOMOTH("Venomoth", 49, 75, new int[]{65,60,90,75,90,70}, false, Type.BUG, Type.POISON),
     DIGLETT("Diglett", 50, 255, new int[]{55,25,35,45,95,10}, false, Type.GROUND),
     DUGTRIO("Dugtrio", 51, 50, new int[]{80,50,50,70,120,35}, false, Type.GROUND),
-    MEOWTH("Meowth", 52, 255, new int[]{45,35,40,40,90,40}, false, Type.NORMAL);
+    MEOWTH("Meowth", 52, 255, new int[]{45,35,40,40,90,40}, false, Type.NORMAL),
+    PERSIAN("Persian", 53, 90, new int[]{70,60,65,65,115,65}, false, Type.NORMAL),
+    PSYDUCK("Psyduck", 54, 190, new int[]{52,48,65,50,55,50}, false, Type.WATER),
+    GOLDUCK("Golduck", 55, 75, new int[]{82,78,95,80,85,80}, false, Type.WATER);
 
 
     private final int[] BASE_STATS;
