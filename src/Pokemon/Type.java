@@ -17,5 +17,6 @@ public enum Type
     FLYING,
     ICE,
     STEEL,
-    POISON
+    POISON,
+    BUG
 }
