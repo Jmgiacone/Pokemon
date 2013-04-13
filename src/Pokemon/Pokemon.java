@@ -5,12 +5,12 @@ import java.util.Random;
 public enum Pokemon
 {
 
-    BULBASAUR("Bulbasaur", new String[]{"Grass", "Poison"}, new int[]{1,1,1,1,1,1,1,1}, false);
+    BULBASAUR("Bulbasaur", Type.GRASS_POISON, new int[]{1,1,1,1,1,1,1,1}, false);
 
     private final int[] BASE_STATS;
-    private final String[] TYPE;
+    private final Type TYPE;
     private final String NAME;
-    private final int 
+    private final short
             ATTACK = 0, 
             DEFENSE = 1, 
             SP_ATTACK = 2, 
@@ -34,7 +34,7 @@ public enum Pokemon
     private int[] calculatedStats, currentStats, ivs, evs;
     private Move[] moveSet;
     
-    Pokemon(String name, String[] type, int[] stats, boolean wild)
+    Pokemon(String name, Type type, int[] stats, boolean wild)
     {
         //No ailments when initialized
         status = new boolean[] {false, false, false, false, false, false};
@@ -154,7 +154,8 @@ public enum Pokemon
      */
     private int damageFormula(Move m, Pokemon p)
     {
-        //TODO Fix up this method to make it more visually appealing
+        /*
+        //Fix up this method to make it more visually appealing
         int a = p.getLevel(), b = p.getCurrentStat(ATTACK), c = m.power(), 
                 d = currentStats[DEFENSE], x = 1, z = new Random().nextInt(38) + 217, 
                 y = superEffective(m), value;
@@ -208,7 +209,9 @@ public enum Pokemon
         }
         //orignal eq'n((((((((2 * a / 5) + 2) * b * c) 
         /// d) / 50) + 2) * 1) * y / 10) * z / 255;
-        return value;
+        return value;*/
+
+        return 0; //Shut up the compiler
     }
     
     /**
@@ -219,39 +222,6 @@ public enum Pokemon
     {
         System.arraycopy(calculatedStats, 0, currentStats, 0, BASE_STATS.length);
     }
-    
-    public double isCaught(Ball ball, Pokemon opponent)
-    {
-        double statusBonus  = 1, a, b, p;
-        if(opponent.status[FROZEN] || opponent.status[ASLEEP])
-        {
-            statusBonus = 2;
-        }
-        else if(opponent.status[PARALYZED] || opponent.status[POISONED] || opponent.status[BURNED])
-        {
-            statusBonus = 1.5;
-        }
-        
-        a = (((3 * opponent.BASE_STATS[HP] - 2 * opponent.currentStats[HP]) * opponent.CATCH_RATE * 
-                ball.getMultiplier()) / 3 * opponent.BASE_STATS[HP]) * statusBonus;
-        a = Math.floor(a);
-        b = 65536 / (Math.pow((255 / a), .25));
-        b = Math.floor(b);
-        
-        if(a >= 255)
-        {
-            return 1.0;
-        }
-        else 
-        {
-            double part1 = (b + 1) / 65536;
-            p = Math.pow(part1, 4);
-            Math.floor(p);
-            
-            return p;
-        }
-            
-    }   
     
     /**
      * This returns current HP
@@ -275,67 +245,14 @@ public enum Pokemon
     }
     
     /**
-     * This method will determine if a move is super effective based on the getTypes
-     * 
-     * @param m The Move being used
-     * @return Damage multiplier(Not very effective: 5, 
-     * normal effectiveness: 10, super effective: 20)
-     */
-    private int superEffective(Move m)
-    {
-//        if(TYPE.length == 1)
-//        {
-//            switch(TYPE[0])
-//            {
-//                case "Water":
-//                    switch(m.getType())
-//                    {
-//                        case "Water":
-//                            return 5;
-//                        case "Grass":
-//                            return 20;
-//                        case "Fire":
-//                            return 5;
-//                        case "Ground":
-//                            return 5;
-//                        case "Electric":
-//                            return 20;
-//                        case "Rock":
-//                            return 5;
-//                        case "Steel":
-//                            return 10;
-//                        case "Flying":
-//                            return 10;
-//                        case "Fighting":
-//                            return 10;
-//                                   
-//                    }
-//            }
-//        }
-//        else
-//        {
-//        }
-        return 0;
-    }
-    
-    /**
      * Gets the first type of the Pokemon
      * @return Their first type
      */
-    public String getType1()
+    public Type getType()
     {
-        return TYPE[0];
+        return TYPE;
     }
-    
-    /**
-     * Returns the second type(if there is one). If one does not exist, then the first is also returned
-     * @return The 2nd type of the Pokemon
-     */
-    public String getType2()
-    {
-        return TYPE[TYPE.length == 2 ? 1 : 0];
-    }
-    
+
     public void revive()
     {
         for(int i = 0; i < 4; i++)
