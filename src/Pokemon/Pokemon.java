@@ -1,14 +1,15 @@
 package Pokemon;
 
+import java.util.Arrays;
 import java.util.Random;
  
 public enum Pokemon
 {
 
-    BULBASAUR("Bulbasaur", Type.GRASS_POISON, new int[]{1,1,1,1,1,1,1,1}, false);
+    BULBASAUR("Bulbasaur", new int[]{1,1,1,1,1,1,1,1}, false, Type.GRASS, Type.POISON);
 
     private final int[] BASE_STATS;
-    private final Type TYPE;
+    private final Type[] TYPE;
     private final String NAME;
     private final short
             ATTACK = 0, 
@@ -34,8 +35,17 @@ public enum Pokemon
     private int[] calculatedStats, currentStats, ivs, evs;
     private Move[] moveSet;
     
-    Pokemon(String name, Type type, int[] stats, boolean wild)
+    Pokemon(String name, int[] stats, boolean wild, final Type... type)
     {
+        if(type.length > 2)
+        {
+            throw new IllegalArgumentException("You must input 1 or 2 types for " + name + ". The types " +
+                    Arrays.toString(type) + " are invalid.");
+        }
+        else if(type.length == 0)
+        {
+            throw new IllegalArgumentException("You must input at least one type for " + name);
+        }
         //No ailments when initialized
         status = new boolean[] {false, false, false, false, false, false};
         BASE_STATS = new int[] {stats[0], stats[1], stats[2], stats[3], stats[4], stats[5]};
@@ -248,25 +258,29 @@ public enum Pokemon
      * Gets the first type of the Pokemon
      * @return Their first type
      */
-    public Type getType()
+    public Type getTypeOne()
     {
-        return TYPE;
+        return TYPE[0];
     }
 
+    public Type getTypeTwo()
+    {
+        return TYPE.length == 2 ? TYPE[1] : getTypeOne();
+    }
     public void revive()
     {
-        for(int i = 0; i < 4; i++)
+        for(Move m : moveSet)
         {
-            moveSet[i].resetPP();
+            m.resetPP();
+            m.resetAccuracy();
         }
 
         resetStats();
-        status[POISONED] = false;
-        status[PARALYZED] = false;
-        status[FROZEN] = false;
-        status[ASLEEP] = false;
-        status[BURNED] = false;
-        status[SEEDED] = false;
+
+        for(int i = POISONED; i <= SEEDED; i++)
+        {
+            status[i] = false;
+        }
     }
     
 }
