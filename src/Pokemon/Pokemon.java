@@ -5,14 +5,9 @@ import java.util.Random;
  
 public enum Pokemon
 {
-    GG("", "", 0, new int[]{}, Type.GRASS);
+    NOLAN("Nolan", "000", (byte)1, new short[] {127,127,127,127,127,127}, Type.DARK);
 
-
-
-    private final int[] BASE_STATS;
-    private final Type[] TYPE;
-    private final String NAME, NAT_DEX_NUMBER;
-    private final short
+    public static final byte
             HP = 0,
             ATTACK = 1,
             DEFENSE = 2,
@@ -25,18 +20,23 @@ public enum Pokemon
             FROZEN = 3, 
             ASLEEP = 4, 
             SEEDED = 5;
-    private final int CATCH_RATE;
+    private final short[] BASE_STATS;
+    private final Type[] TYPE;
+    private final String NAME, NAT_DEX_NUMBER;
+    private final byte CATCH_RATE;
+
     //private final boolean WILD;
     //Poison, Paralyze, Burn, Frozen, Asleep, Seeded
     private boolean[] status;
-    //Shorts -128 -> 127
-    private short level;
+    //Byte -128 -> 127
+    private byte level;
     private int totalExpForNextLevel, totalExp;
     //Attack, Defense, Sp. Attack, Sp. Defense, Speed, HP
-    private int[] currentStats, inBattleStats, ivs, evs;
+    private short[] currentStats, inBattleStats;
+    private byte[] ivs, evs;
     private Move[] moveSet;
     
-    Pokemon(String name, final String dexNumber, final int catchRate, int[] stats, final Type... type)
+    Pokemon(String name, final String dexNumber, final byte catchRate, short[] stats, final Type... type)
     {
         if(type.length > 2)
         {
@@ -49,17 +49,17 @@ public enum Pokemon
         }
         //No ailments when initialized
         status = new boolean[] {false, false, false, false, false, false};
-        BASE_STATS = new int[] {stats[0], stats[1], stats[2], stats[3], stats[4], stats[5]};
+        BASE_STATS = new short[] {stats[0], stats[1], stats[2], stats[3], stats[4], stats[5]};
         moveSet = new Move[4];
-        ivs = new int[6];
+        ivs = new byte[6];
         
         for(int i = 0; i < ivs.length; i++)
         {
-            ivs[i] = new Random().nextInt(31) + 1;
+            ivs[i] = (byte)((new Random()).nextInt(31) + 1);
         }
         
-        evs = new int[] {0, 0, 0, 0, 0, 0};
-        currentStats = new int[]{
+        evs = new byte[] {0, 0, 0, 0, 0, 0};
+        currentStats = new short[]{
         calculateStat(HP),
         calculateStat(ATTACK),
         calculateStat(DEFENSE),
@@ -70,7 +70,6 @@ public enum Pokemon
         System.arraycopy(currentStats, 0, inBattleStats, 0, currentStats.length);
         CATCH_RATE = catchRate;//Dependent on the Pokemon
         NAT_DEX_NUMBER = dexNumber;
-        ivs = new int[6];
         level = 5;
         totalExpForNextLevel = (4 * (int)Math.pow(level + 1, 3)) / 5;
         
@@ -87,30 +86,30 @@ public enum Pokemon
      * @return The base value of that stat
      * @throws ArrayIndexOutOfBoundsException If the passed in constant is invalid 
      */
-    public int getBaseStat(final int stat) throws ArrayIndexOutOfBoundsException
+    public short getBaseStat(final int stat) throws ArrayIndexOutOfBoundsException
     {
         return BASE_STATS[stat];
     }
     
-    public int getInBattleStat(final int stat) throws ArrayIndexOutOfBoundsException
+    public short getInBattleStat(final int stat) throws ArrayIndexOutOfBoundsException
     {
         return inBattleStats[stat];
     }
 
-    public int getCurrentStat(final int stat) throws ArrayIndexOutOfBoundsException
+    public short getCurrentStat(final int stat) throws ArrayIndexOutOfBoundsException
     {
         return currentStats[stat];
     }
     
-   /**
+    /**
      * Calculates any stat
      * @param  stat The Constant for the stat that you want to calculate
      * @return the calculated stat
      */
-    private int calculateStat(final int stat)
+    private short calculateStat(final byte stat)
     {
-        return stat == HP ? (((ivs[HP] + (2 * BASE_STATS[HP]) + (evs[HP] / 4) + 100) * level) / 100) + 10 : 
-                (((ivs[stat] + (2 * BASE_STATS[stat]) + (evs[stat] / 4)) * level) / 100) + 5;
+        return (short)(stat == HP ? (((ivs[HP] + (2 * BASE_STATS[HP]) + (evs[HP] / 4) + 100) * level) / 100) + 10 :
+                (((ivs[stat] + (2 * BASE_STATS[stat]) + (evs[stat] / 4)) * level) / 100) + 5);
     }
     
     /**
