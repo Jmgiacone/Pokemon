@@ -14,6 +14,8 @@ public class TypeTest
         assertTrue(Type.WATER.isSuperEffectiveAgainst(Type.FIRE));
         assertTrue(Type.BUG.isSuperEffectiveAgainst(Type.GRASS));
         assertFalse(Type.FIGHTING.isSuperEffectiveAgainst(Type.GHOST));
+        assertTrue(Type.FIGHTING.isSuperEffectiveAgainst(Type.NORMAL));
+        assertFalse(Type.NORMAL.isSuperEffectiveAgainst(Type.FIGHTING));
     }
 
     @Test
