@@ -54,13 +54,16 @@ public enum Type
             new String[]{"Fighting", "Dark", "Steel"},
             new String[]{});
 
-    private final Type[] SUPER_EFFECTIVE, NOT_VERY_EFFECTIVE, NO_EFFECT;
+    private Type[] SUPER_EFFECTIVE, NOT_VERY_EFFECTIVE, NO_EFFECT;
+    private final String[] superEffective, notVeryEffective, noEffect;
+    private boolean first;
 
     Type(String[] superEffective, String[] notVeryEffective, String[] noEffect)
     {
-        SUPER_EFFECTIVE = decipher(superEffective);
-        NOT_VERY_EFFECTIVE = decipher(notVeryEffective);
-        NO_EFFECT = decipher(noEffect);
+        this.superEffective = superEffective;
+        this.notVeryEffective = notVeryEffective;
+        this.noEffect = noEffect;
+        first = true;
     }
 
     private Type[] decipher(String[] types)
@@ -153,16 +156,40 @@ public enum Type
 
     public boolean isSuperEffectiveAgainst(Type p)
     {
+        if(first)
+        {
+            SUPER_EFFECTIVE = decipher(superEffective);
+            NOT_VERY_EFFECTIVE = decipher(notVeryEffective);
+            NO_EFFECT = decipher(noEffect);
+
+            first = false;
+        }
         return contains(SUPER_EFFECTIVE, p);
     }
 
     public boolean isNotVeryEffectiveAgainst(Type p)
     {
+        if(first)
+        {
+            SUPER_EFFECTIVE = decipher(superEffective);
+            NOT_VERY_EFFECTIVE = decipher(notVeryEffective);
+            NO_EFFECT = decipher(noEffect);
+
+            first = false;
+        }
         return contains(NOT_VERY_EFFECTIVE, p);
     }
 
     public boolean hasNoEffectOn(Type p)
     {
+        if(first)
+        {
+            SUPER_EFFECTIVE = decipher(superEffective);
+            NOT_VERY_EFFECTIVE = decipher(notVeryEffective);
+            NO_EFFECT = decipher(noEffect);
+
+            first = false;
+        }
         return contains(NO_EFFECT, p);
     }
 
