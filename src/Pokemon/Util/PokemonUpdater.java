@@ -12,20 +12,129 @@ public class PokemonUpdater
     public static void main(String[] args) throws MalformedURLException, IOException
     {
         URL statsUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_base_stats"),
-            types = new URL("http://bulbapedia.bulbagarden.net/wiki/Natdex#Generation_VI");
+            typeUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/Natdex#Generation_VI"),
+            evYieldUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_effort_value_yield");
 
         BufferedReader inStats = new BufferedReader(new InputStreamReader(statsUrl.openStream())),
-            inTypes = new BufferedReader(new InputStreamReader(types.openStream())),
-            inDex = new BufferedReader(new InputStreamReader(types.openStream())),
-            inNames = new BufferedReader(new InputStreamReader(types.openStream()));
+            inTypes = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
+            inDex = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
+            inNames = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
+            inYields = new BufferedReader(new InputStreamReader(evYieldUrl.openStream()));
 
         Scanner reader = new Scanner(new File("Catch rate html.txt"));
 
-        ArrayList<String> catchRates = new ArrayList<>(), names = new ArrayList<>(),
-                stats = new ArrayList<>(), dexNum = new ArrayList<>(),type = new ArrayList<>();
+        ArrayList<String> catchRates = new ArrayList<>(),
+                names = new ArrayList<>(),
+                stats = new ArrayList<>(),
+                dexNum = new ArrayList<>(),
+                type = new ArrayList<>(),
+                evYields = new ArrayList<>(),
+                xpYields = new ArrayList<>();
 
-        int count = 0, stat, loopNum;
-        String line, name, num, code;
+        int count = 0, stat, loopNum = 1;
+        String line, name, num, code, partial = "", statName, XPyield = "", evYield;
+
+        while((line = inYields.readLine()) != null)
+        {
+            if(line.contains("<a href=\"/wiki/"))
+            {
+                try
+                {
+                    statName = line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_(P"));
+
+                    switch(statName)
+                    {
+                        case "Castform":
+                            loopNum = 4;
+                            break;
+                        case "Burmy":
+                            loopNum = 3;
+                            break;
+                        case "Shellos":
+                            loopNum = 2;
+                            break;
+                        case "Gastrodon":
+                            loopNum = 2;
+                            break;
+                        case "Rotom":
+                            loopNum = 6;
+                            break;
+                        case "Giratina":
+                            loopNum = 2;
+                            break;
+                        case "Basculin":
+                            loopNum = 2;
+                            break;
+                        case "Keldeo":
+                            loopNum = 2;
+                            break;
+                        case "Unfezant":
+                            loopNum = 2;
+                            break;
+                        case "Frillish":
+                            loopNum = 2;
+                            break;
+                        case "Jellicent":
+                            loopNum = 2;
+                            break;
+                        default:
+                            loopNum = 1;
+                            break;
+                    }
+                }
+                catch(IndexOutOfBoundsException e)
+                {
+                    //Wasn't a name...
+                }
+            }
+            //Get the base XP and EV yields
+            if(line.contains("<td style=\"background:"))
+            {
+                try
+                {
+                    stat = Integer.parseInt(line.substring(line.indexOf("\">") + 3));
+
+                    if(count == -1)
+                    {
+                        //Do nothing - skip the total evs
+                        count++;
+                    }
+                    else if(count == 0)
+                    {
+                        XPyield = stat + "";
+                        count++;
+                    }
+                    else if(count > 0 && count < 6)
+                    {
+                        count++;
+                        partial += stat + ", ";
+                    }
+                    else
+                    {
+                        count = -1;
+                        partial += stat;
+
+                        for(int i = 0; i < loopNum; i++)
+                        {
+                            evYields.add(partial);
+                            xpYields.add(XPyield);
+                        }
+
+                        loopNum = 1;
+                        partial = "";
+                    }
+                }
+                catch(NumberFormatException e)
+                {
+
+                }
+                catch(IndexOutOfBoundsException e)
+                {
+
+                }
+            }
+        }
+        inYields.close();
 
         while(reader.hasNextLine())
         {
@@ -118,7 +227,8 @@ public class PokemonUpdater
         }
 
         loopNum = 1;
-        String partial = "", statName;
+        partial = "";
+        count = 0;
         while((line = inStats.readLine()) != null)
         {
             //HTML Tag denoting a Pokemon name
@@ -411,10 +521,12 @@ public class PokemonUpdater
             writer.println(names.get(i).toUpperCase() +
                     "(" + "\"" + names.get(i) +
                     "\", \"" + dexNum.get(i) +
-                    "\", (byte)" + catchRates.get(i) +
+                    "\", (short)" + catchRates.get(i) +
                     ", " +
-                    "new short[] {" + stats.get(i) +
-                    "}, " + type.get(i) +
+                    "new short[] {" + stats.get(i) + "}, (byte)" +
+                    xpYields.get(i) + ", " +
+                    "new byte[] {" + evYields.get(i) + "}, " +
+                    type.get(i) +
                     ")" + addon);
             writer.flush();
         }
