@@ -54,40 +54,25 @@ public enum Type
             new String[]{"Fighting", "Dark", "Steel"},
             new String[]{});
 
-    private Type[] SUPER_EFFECTIVE, NOT_VERY_EFFECTIVE, NO_EFFECT;
-    private final String[] superEffective, notVeryEffective, noEffect;
-    private boolean first;
+    private final String[] SUPER_EFFECTIVE, NOT_VERY_EFFECTIVE, NO_EFFECT;
 
     Type(String[] superEffective, String[] notVeryEffective, String[] noEffect)
     {
-        this.superEffective = superEffective;
-        this.notVeryEffective = notVeryEffective;
-        this.noEffect = noEffect;
-        first = true;
+        SUPER_EFFECTIVE = superEffective;
+        NOT_VERY_EFFECTIVE= notVeryEffective;
+        NO_EFFECT = noEffect;
     }
 
-    private Type[] decipher(String[] types)
-    {
-        Type[] deciphered = new Type[types.length];
-
-        for(int i = 0; i < types.length; i++)
-        {
-            deciphered[i] = valueOf(types[i]);
-        }
-
-        return deciphered;
-    }
-
-    private boolean contains(Type[] t, Type p)
+    private boolean contains(String[] t, Type p)
     {
         if(t.length == 0)
         {
             return false;
         }
 
-        for(Type type : t)
+        for(String type : t)
         {
-            if(type == p)
+            if(type.equalsIgnoreCase(t + ""))
             {
                 return true;
             }
@@ -96,49 +81,84 @@ public enum Type
         return false;
     }
 
-    public boolean isSuperEffectiveAgainst(Type p)
+    private Type[] convert(String[] types)
     {
-        if(first)
-        {
-            SUPER_EFFECTIVE = decipher(superEffective);
-            NOT_VERY_EFFECTIVE = decipher(notVeryEffective);
-            NO_EFFECT = decipher(noEffect);
+        Type[] t = new Type[types.length];
 
-            first = false;
+        for(int i = 0; i < t.length; i++)
+        {
+            t[i] = valueOf(types[i]);
         }
-        return contains(SUPER_EFFECTIVE, p);
+
+        return t;
     }
 
-    public boolean isNotVeryEffectiveAgainst(Type p)
+    /**
+     * Tells whether or not this Type is Super Effective (x2) against the specified Type
+     * @param t The Type to check
+     * @return True or False
+     */
+    public boolean isSuperEffectiveAgainst(Type t)
     {
-        if(first)
-        {
-            SUPER_EFFECTIVE = decipher(superEffective);
-            NOT_VERY_EFFECTIVE = decipher(notVeryEffective);
-            NO_EFFECT = decipher(noEffect);
-
-            first = false;
-        }
-        return contains(NOT_VERY_EFFECTIVE, p);
+        return contains(SUPER_EFFECTIVE, t);
     }
 
-    public boolean hasNoEffectOn(Type p)
+    /**
+     * Tells whether or not this Type is Not Very Effective (x.5) against the specified Type
+     * @param t The Type to check
+     * @return True or False
+     */
+    public boolean isNotVeryEffectiveAgainst(Type t)
     {
-        if(first)
-        {
-            SUPER_EFFECTIVE = decipher(superEffective);
-            NOT_VERY_EFFECTIVE = decipher(notVeryEffective);
-            NO_EFFECT = decipher(noEffect);
-
-            first = false;
-        }
-        return contains(NO_EFFECT, p);
+        return contains(NOT_VERY_EFFECTIVE, t);
     }
 
-    public boolean isNormalAgainst(Type p)
+    /**
+     * Tells whether or not this Type has no Effect (x0) against the specified Type
+     * @param t The Type to check
+     * @return True or False
+     */
+    public boolean hasNoEffectOn(Type t)
     {
-        return !isSuperEffectiveAgainst(p) &&
-                !isNotVeryEffectiveAgainst(p) &&
-                !hasNoEffectOn(p);
+        return contains(NO_EFFECT, t);
+    }
+
+    /**
+     * Tells whether or not this Type does normal damage (x1) against the specified Type
+     * @param t The Type to check
+     * @return True or False
+     */
+    public boolean isNormalAgainst(Type t)
+    {
+        return !isSuperEffectiveAgainst(t) &&
+                !isNotVeryEffectiveAgainst(t) &&
+                !hasNoEffectOn(t);
+    }
+
+    /**
+     * Gets all the types that this Type is Super Effective (x2) Against
+     * @return the types that this Type is Super Effective Against
+     */
+    public Type[] getTypesSuperEffectiveAgainst()
+    {
+        return convert(SUPER_EFFECTIVE);
+    }
+
+    /**
+     * Gets all the types that this Type is Not Very Effective (x.5) Against
+     * @return the types that this Type is Not Very Effective Against
+     */
+    public Type[] getTypesNotVeryEffectiveAgainst()
+    {
+        return convert(NOT_VERY_EFFECTIVE);
+    }
+
+    /**
+     * Gets all the types that this Type has no Effect (x0) Against
+     * @return the types that this Type has no Effect (x0) Against
+     */
+    public Type[] getTypesNoEffectAgainst()
+    {
+        return convert(NO_EFFECT);
     }
 }
