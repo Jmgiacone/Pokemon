@@ -21,8 +21,6 @@ public class PokemonUpdater
 
         Scanner reader = new Scanner(new File("Catch rate html.txt"));
 
-        PrintWriter writer  = new PrintWriter(new File("Pokemon.txt"));
-
         ArrayList<String> catchRates = new ArrayList<>(), names = new ArrayList<>(),
                 stats = new ArrayList<>(), dexNum = new ArrayList<>(),type = new ArrayList<>();
 
@@ -401,6 +399,8 @@ public class PokemonUpdater
 
         String addon = ",";
         String[] parts;
+
+        PrintWriter writer  = new PrintWriter(new File("Pokemon.txt"));
         for(int i = 0; i < names.size(); i++)
         {
             //parts = names.get(i).split("\\.' ");
@@ -411,9 +411,9 @@ public class PokemonUpdater
             writer.println(names.get(i).toUpperCase() +
                     "(" + "\"" + names.get(i) +
                     "\", \"" + dexNum.get(i) +
-                    "\", " + catchRates.get(i) +
+                    "\", (byte)" + catchRates.get(i) +
                     ", " +
-                    "new int[] {" + stats.get(i) +
+                    "new short[] {" + stats.get(i) +
                     "}, " + type.get(i) +
                     ")" + addon);
             writer.flush();
