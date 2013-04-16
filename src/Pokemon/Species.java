@@ -1,19 +1,18 @@
 package Pokemon;
 
 import java.util.Arrays;
-import java.util.Random;
 
 public enum Species
 {
-    NOLAN("Nolan", "000", (byte)1, new short[] {127,127,127,127,127,127}, Type.DARK);
-
+    NOLAN("Nolan", "000", (short)1, new short[] {127,127,127,127,127,127}, (byte)0,new byte[] {1, 1, 1, 1, 1, 1}, Type.DARK);
 
     private final short[] BASE_STATS;
+    private final byte[] EV_YIELD;
     private final Type[] TYPE;
     private final String NAME, NAT_DEX_NUMBER;
-    private final byte CATCH_RATE;
+    private final short CATCH_RATE;
 
-    Species(String name, final String dexNumber, final byte catchRate, short[] stats, final Type... type)
+    Species(String name, final String dexNumber, final short catchRate, short[] stats, byte expYield, byte[] evYield, final Type... type)
     {
         if(type.length > 2)
         {
@@ -25,12 +24,32 @@ public enum Species
             throw new IllegalArgumentException("You must input at least one type for " + name);
         }
 
+        EV_YIELD = new byte[] {evYield[0], evYield[1], evYield[2], evYield[3], evYield[4], evYield[5]};
         BASE_STATS = new short[] {stats[0], stats[1], stats[2], stats[3], stats[4], stats[5]};
-        CATCH_RATE = catchRate;//Dependent on the Pokemon
+        CATCH_RATE = catchRate;
         NAT_DEX_NUMBER = dexNumber;
 
         NAME = name;
         TYPE = type;
+    }
+
+    public byte[] getEVYields()
+    {
+        return EV_YIELD;
+    }
+
+    public byte getYield(final byte stat)
+    {
+        return EV_YIELD[stat];
+    }
+    public short getCatchRate()
+    {
+        return CATCH_RATE;
+    }
+
+    public String getDexNumber()
+    {
+        return NAT_DEX_NUMBER;
     }
 
     /**
@@ -44,10 +63,6 @@ public enum Species
         return BASE_STATS[stat];
     }
 
-
-
-
-
     /**
      * Returns Name of the Pokemon
      *
@@ -58,7 +73,6 @@ public enum Species
         return NAME;
     }
 
-    //Very proud of this method here
     /**
      * This does the damage calculation from the actual Pokemon game and
      * returns the final damage. Props to the equation from
