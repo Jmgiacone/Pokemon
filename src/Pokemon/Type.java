@@ -69,68 +69,10 @@ public enum Type
     private Type[] decipher(String[] types)
     {
         Type[] deciphered = new Type[types.length];
-        Type t;
 
         for(int i = 0; i < types.length; i++)
         {
-            switch(types[i])
-            {
-                case "Grass":
-                    t = GRASS;
-                    break;
-                case "Water":
-                    t = WATER;
-                    break;
-                case "Rock":
-                    t = ROCK;
-                    break;
-                case "Ground":
-                    t = GROUND;
-                    break;
-                case "Ghost":
-                    t = GHOST;
-                    break;
-                case "Dragon":
-                    t = DRAGON;
-                    break;
-                case "Fire":
-                    t = FIRE;
-                    break;
-                case "Normal":
-                    t = NORMAL;
-                    break;
-                case "Fighting":
-                    t = FIGHTING;
-                    break;
-                case "Psychic":
-                    t = PSYCHIC;
-                    break;
-                case "Dark":
-                    t = DARK;
-                    break;
-                case "Electric":
-                    t = ELECTRIC;
-                    break;
-                case "Flying":
-                    t = FLYING;
-                    break;
-                case "Ice":
-                    t = ICE;
-                    break;
-                case "Steel":
-                    t = STEEL;
-                    break;
-                case "Poison":
-                    t = POISON;
-                    break;
-                case "Bug":
-                    t = BUG;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Type " + types[i] + " is not a real type");
-            }
-
-            deciphered[i] = t;
+            deciphered[i] = valueOf(types[i]);
         }
 
         return deciphered;
