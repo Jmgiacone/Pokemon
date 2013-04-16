@@ -1,8 +1,5 @@
 package Pokemon;
 
-import java.util.Arrays;
-import java.util.Random;
- 
 public class Pokemon
 {
     public static final byte
@@ -18,8 +15,9 @@ public class Pokemon
             FROZEN = 3,
             ASLEEP = 4,
             SEEDED = 5;
+    
     private Species species;
-    //private final boolean WILD;
+    private final byte[] IVS;
     //Poison, Paralyze, Burn, Frozen, Asleep, Seeded
     private boolean[] status;
 
@@ -29,21 +27,30 @@ public class Pokemon
 
     //HP, Attack, Defense, Sp. Attack, Sp. Defense, Speed
     private short[] currentStats, inBattleStats;
-    private byte[] ivs, evs;
+    private byte[] evs;
     private Move[] moveSet;
 
     public Pokemon(Species species)
     {
+        //Set the Species of the Pokemon (ie. Charizard, Squirtle, etc...)
+        this.species = species;
+        
+        //All Pokemon start out with no status conditions
         status = new boolean[] {false, false, false, false, false, false};
+        
+        //Needs to be a short because get bigger than 128
         inBattleStats = new short[6];
         moveSet = new Move[4];
-        ivs = new byte[6];
+        
+        //IV's only go 0-31;
+        IVS = new byte[6];
 
-        for(int i = 0; i < ivs.length; i++)
+        for(int i = 0; i < IVS.length; i++)
         {
-            ivs[i] = (byte)((new Random()).nextInt(31) + 1);
+            IVS[i] = (byte)(Math.random() * 32);
         }
 
+        //EVS all start at 0
         evs = new byte[] {0, 0, 0, 0, 0, 0};
 
         currentStats = new short[]{
@@ -54,10 +61,16 @@ public class Pokemon
                 calculateStat(SP_DEFENSE),
                 calculateStat(SPEED)};
 
+        //Copy the contents of currentStats -> inBattleStats
         System.arraycopy(currentStats, 0, inBattleStats, 0, currentStats.length);
+
+        //All Pokemon start at level 5
         level = 5;
+
+        //Exp for next level = (4 * (level + 1)^3) / 5
         totalExpForNextLevel = (4 * (int)Math.pow(level + 1, 3)) / 5;
 
+        //Total XP = (4 * level^3) / 5
         totalExp = (4 * (int)Math.pow(level, 3)) / 5;
     }
 
@@ -78,8 +91,8 @@ public class Pokemon
      */
     private short calculateStat(final byte stat)
     {
-        return (short)(stat == HP ? (((ivs[HP] + (2 * species.getBaseStat(HP)) + (evs[HP] / 4) + 100) * level) / 100) + 10 :
-                (((ivs[stat] + (2 * species.getBaseStat(stat)) + (evs[stat] / 4)) * level) / 100) + 5);
+        return (short)(stat == HP ? (((IVS[HP] + (2 * species.getBaseStat(HP)) + (evs[HP] / 4) + 100) * level) / 100) + 10 :
+                (((IVS[stat] + (2 * species.getBaseStat(stat)) + (evs[stat] / 4)) * level) / 100) + 5);
     }
 
     public short getInBattleStat(final int stat) throws ArrayIndexOutOfBoundsException
@@ -93,12 +106,15 @@ public class Pokemon
     }
 
     /**
-     * All this does is make sure that at the beginning of each battle,
-     * the stats have been reset to their original values
+     * All this does is make sure that at the beginning of each battle, all stats except HP have been reset to their original values
      */
     public void resetStats()
     {
-        System.arraycopy(currentStats, 0, inBattleStats, 0, 6);
+        //Ignore the HP
+        for(int i = ATTACK; i <= SPEED; i++)
+        {
+            inBattleStats[i] = currentStats[i];
+        }
     }
 
     /**
@@ -131,6 +147,8 @@ public class Pokemon
         }
 
         resetStats();
+        //Un-neglect the HP
+        inBattleStats[HP] = currentStats[HP];
 
         for(int i = POISONED; i <= SEEDED; i++)
         {
