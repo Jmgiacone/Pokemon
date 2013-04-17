@@ -13,13 +13,15 @@ public class PokemonUpdater
     {
         URL statsUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_base_stats"),
             typeUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/Natdex#Generation_VI"),
-            evYieldUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_effort_value_yield");
+            evYieldUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_effort_value_yield"),
+            genderRationUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_gender_ratio");
 
         BufferedReader inStats = new BufferedReader(new InputStreamReader(statsUrl.openStream())),
             inTypes = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
             inDex = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
             inNames = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
-            inYields = new BufferedReader(new InputStreamReader(evYieldUrl.openStream()));
+            inYields = new BufferedReader(new InputStreamReader(evYieldUrl.openStream())),
+            inGenderRatio = new BufferedReader(new InputStreamReader(genderRationUrl.openStream()));
 
         Scanner reader = new Scanner(new File("Catch rate html.txt"));
 
@@ -29,10 +31,16 @@ public class PokemonUpdater
                 dexNum = new ArrayList<>(),
                 type = new ArrayList<>(),
                 evYields = new ArrayList<>(),
-                xpYields = new ArrayList<>();
+                xpYields = new ArrayList<>(),
+                genderRatios = new ArrayList<>();
+
+        for(int i = 0; i < 680; i++)
+        {
+            genderRatios.add("");
+        }
 
         int count = 0, stat, loopNum = 1;
-        String line, name, num, code, partial = "", statName, XPyield = "", evYield;
+        String line, name, num, code, partial = "", statName, XPyield = "", evYield, ratio, currentRatio = "", ratioName;
 
         while((line = inYields.readLine()) != null)
         {
@@ -458,6 +466,37 @@ public class PokemonUpdater
                     //Not a Pokemon name
                 }
             }
+        }
+
+        loopNum = 1;
+        while((line = inGenderRatio.readLine()) != null)
+        {
+            //System.out.println(line);
+
+            //Header for a Classification
+            if(line.contains("<h2> <span class=\"mw-headline\" id=\""))
+            {
+                currentRatio = line.substring(line.indexOf("id=\"") + 4, line.indexOf("\">"));
+            }
+
+            //Tag for a Pokemon Name
+            if(line.contains("<td><a href=\"/wiki/"))
+            {
+                ratioName = line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_(Pok"));
+
+                //Ensuring it's an actual name
+                if(names.contains(ratioName))
+                {
+                    genderRatios.set(names.indexOf(ratioName), currentRatio);
+                }
+            }
+            //<h2> <span class="mw-headline" id="Male_only">Male only</span></h2>
+            //<h2> <span class="mw-headline" id="1_.E2.99.80_:_7_.E2.99.82">1 ♀&#160;: 7 ♂</span></h2>
+            //<h2> <span class="mw-headline" id="1_.E2.99.80_:_3_.E2.99.82">1 ♀&#160;: 3 ♂</span></h2>
+            //<h2> <span class="mw-headline" id="1_.E2.99.80_:_1_.E2.99.82">1 ♀&#160;: 1 ♂</span></h2>
+            //<h2> <span class="mw-headline" id="3_.E2.99.80_:_1_.E2.99.82">3 ♀&#160;: 1 ♂</span></h2>
+            //<h2> <span class="mw-headline" id="Female_only">Female only</span></h2>
+            //<h2> <span class="mw-headline" id="Genderless">Genderless</span></h2>
         }
 
         loopNum = 1;
