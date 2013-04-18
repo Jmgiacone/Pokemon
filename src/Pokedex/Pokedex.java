@@ -1,5 +1,6 @@
 package Pokedex;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,5 +70,14 @@ public class Pokedex {
             }
         }
         return found;
+    }
+
+    /**
+     * Gets the sprite image for the pokemon specified.
+     * @param p The pokemon to get the sprite of.
+     * @return The image of the sprite.
+     */
+    public Image displaySprite(final Pokemon p) {
+        return null;
     }
 }
