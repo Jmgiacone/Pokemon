@@ -82,6 +82,17 @@ public class Pokemon
     {
         return species.getName();
     }
+
+    public Type getTypeOne()
+    {
+        return species.getTypeOne();
+    }
+
+    public Type getTypeTwo()
+    {
+        return species.getTypeTwo();
+    }
+
     /**
      * Returns the level of the Pokemon
      *
