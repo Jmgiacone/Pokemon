@@ -454,7 +454,7 @@ public class PokemonUpdater
             {
                 try
                 {
-                    name = line.substring(line.indexOf("(Pokémon)\">") + 11, line.indexOf("</a>"));
+                    name = line.substring(line.indexOf("(Pokémon)\">") + 11, line.indexOf("</a>")).trim();
 
                     for(int i = 0; i < loopNum; i++)
                     {
@@ -471,8 +471,6 @@ public class PokemonUpdater
         loopNum = 1;
         while((line = inGenderRatio.readLine()) != null)
         {
-            //System.out.println(line);
-
             //Header for a Classification
             if(line.contains("<h2> <span class=\"mw-headline\" id=\""))
             {
@@ -510,9 +508,7 @@ public class PokemonUpdater
             //Tag for a Pokemon Name
             if(line.contains("<td><a href=\"/wiki/") && !line.contains("src=\"http://cdn.bulbagarden.net/upload/"))
             {
-                System.out.println(line);
                 ratioName = line.substring(line.indexOf("title=\"") + 7, line.indexOf(" (Pok"));
-                System.out.println(ratioName);
 
                 //Ensuring it's an actual name
                 if(names.contains(ratioName))
@@ -520,13 +516,6 @@ public class PokemonUpdater
                     genderRatios.set(names.indexOf(ratioName), currentRatio);
                 }
             }
-            //<h2> <span class="mw-headline" id="Male_only">Male only</span></h2>
-            //<h2> <span class="mw-headline" id="1_.E2.99.80_:_7_.E2.99.82">1 ♀&#160;: 7 ♂</span></h2>
-            //<h2> <span class="mw-headline" id="1_.E2.99.80_:_3_.E2.99.82">1 ♀&#160;: 3 ♂</span></h2>
-            //<h2> <span class="mw-headline" id="1_.E2.99.80_:_1_.E2.99.82">1 ♀&#160;: 1 ♂</span></h2>
-            //<h2> <span class="mw-headline" id="3_.E2.99.80_:_1_.E2.99.82">3 ♀&#160;: 1 ♂</span></h2>
-            //<h2> <span class="mw-headline" id="Female_only">Female only</span></h2>
-            //<h2> <span class="mw-headline" id="Genderless">Genderless</span></h2>
         }
 
         loopNum = 1;
