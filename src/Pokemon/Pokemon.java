@@ -17,6 +17,7 @@ public class Pokemon
             SEEDED = 5;
     
     private Species species;
+    private final Nature NATURE;
     private final Gender GENDER;
     private final byte[] IVS;
     //Poison, Paralyze, Burn, Frozen, Asleep, Seeded
@@ -65,7 +66,7 @@ public class Pokemon
         //Copy the contents of currentStats -> inBattleStats
         System.arraycopy(currentStats, 0, inBattleStats, 0, currentStats.length);
 
-        //All Pokemon start at level 5
+        //All Pokemon start at level 1
         level = 5;
 
         //Exp for next level = (4 * (level + 1)^3) / 5
@@ -73,8 +74,14 @@ public class Pokemon
 
         //Total XP = (4 * level^3) / 5
         totalExp = (4 * (int)Math.pow(level, 3)) / 5;
+
+        NATURE = Nature.values()[(int)Math.random() * Nature.values().length];
     }
 
+    public String getName()
+    {
+        return species.getName();
+    }
     /**
      * Returns the level of the Pokemon
      *
