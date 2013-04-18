@@ -4,15 +4,58 @@ import java.util.Arrays;
 
 public enum Species
 {
-    NOLAN("Nolan", "000", (short)1, new short[] {127,127,127,127,127,127}, (byte)0,new byte[] {1, 1, 1, 1, 1, 1}, Type.DARK);
+    NOLAN("Nolan", "000", (short)1, new short[] {127,127,127,127,127,127}, (byte)0,new byte[] {1, 1, 1, 1, 1, 1},
+            GenderRatio.GENDERLESS, Type.DARK);
 
+    public /*rivate*/ enum GenderRatio
+    {
+        MALE_ONLY((byte)100),
+        ONE_FEMALE_SEVEN_MALE((float)87.5),
+        ONE_FEMALE_THREE_MALE((byte)75),
+        ONE_FEMALE_ONE_MALE((byte)50),
+        THREE_FEMALE_ONE_MALE((byte)25),
+        FEMALE_ONLY((byte)0),
+        GENDERLESS((byte)-1);
+
+        private final float PERCENT_MALE;
+
+        GenderRatio(byte percentMale)
+        {
+            PERCENT_MALE = percentMale;
+        }
+
+        GenderRatio(float percentMale)
+        {
+            PERCENT_MALE = percentMale;
+        }
+
+        public Gender getGender()
+        {
+            switch((byte)PERCENT_MALE)
+            {
+                case 100:
+                    return Gender.MALE;
+                case 0:
+                    return Gender.FEMALE;
+                case -1:
+                    return Gender.GENDERLESS;
+            }
+
+            byte t = (byte)((Math.random() * 100) + 1);
+            return t <= PERCENT_MALE ? Gender.MALE : Gender.FEMALE;
+        }
+    }
+
+    private final GenderRatio GENDER_RATIO;
     private final short[] BASE_STATS;
     private final byte[] EV_YIELD;
     private final Type[] TYPE;
     private final String NAME, NAT_DEX_NUMBER;
     private final short CATCH_RATE;
+    private boolean HAS_CALCULATED_GENDER;
 
-    Species(String name, final String dexNumber, final short catchRate, short[] stats, byte expYield, byte[] evYield, final Type... type)
+    Species(String name, final String dexNumber, final short catchRate, short[] stats, byte expYield, byte[] evYield,
+            GenderRatio ratio, final Type... type)
     {
         if(type.length > 2)
         {
@@ -24,6 +67,8 @@ public enum Species
             throw new IllegalArgumentException("You must input at least one type for " + name);
         }
 
+        HAS_CALCULATED_GENDER = false;
+        GENDER_RATIO = ratio;
         EV_YIELD = new byte[] {evYield[0], evYield[1], evYield[2], evYield[3], evYield[4], evYield[5]};
         BASE_STATS = new short[] {stats[0], stats[1], stats[2], stats[3], stats[4], stats[5]};
         CATCH_RATE = catchRate;
@@ -63,6 +108,16 @@ public enum Species
         return BASE_STATS[stat];
     }
 
+    public Gender getGender()
+    {
+        if(!HAS_CALCULATED_GENDER)
+        {
+            HAS_CALCULATED_GENDER = true;
+            return GENDER_RATIO.getGender();
+        }
+
+        throw new UnsupportedOperationException("Gender can only be calculated once.");
+    }
     /**
      * Returns Name of the Pokemon
      *
