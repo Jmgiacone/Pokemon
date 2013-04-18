@@ -5,9 +5,9 @@ import java.util.Arrays;
 public enum Species
 {
     NOLAN("Nolan", "000", (short)1, new short[] {127,127,127,127,127,127}, (byte)0,new byte[] {1, 1, 1, 1, 1, 1},
-            GenderRatio.GENDERLESS, Type.DARK);
+            GenderRatio.GENDERLESS, ExperienceGroup.FLUCTUATING, Type.DARK);
 
-    public /*rivate*/ enum GenderRatio
+    private enum GenderRatio
     {
         MALE_ONLY((byte)100),
         ONE_FEMALE_SEVEN_MALE((float)87.5),
@@ -46,6 +46,71 @@ public enum Species
         }
     }
 
+    private enum ExperienceGroup
+    {
+        ERRATIC,
+        FAST,
+        MEDIUM_FAST,
+        MEDIUM_SLOW,
+        SLOW,
+        FLUCTUATING;
+
+        public int getExpForLevel(final byte level)
+        {
+            switch(this)
+            {
+                case ERRATIC:
+                    return calcErratic(level);
+                case FAST:
+                    return calcFast(level);
+                case MEDIUM_FAST:
+                    break;
+                case MEDIUM_SLOW:
+                    break;
+                case SLOW:
+                    break;
+                case FLUCTUATING:
+                    break;
+                default:
+                    throw new IllegalStateException("Enum " + this + " is illlegal");
+            }
+        }
+
+        private int calcErratic(byte level)
+        {
+            if(level > 0 && level <= 50)
+            {
+                return (int)((Math.pow(level, 3) * (100 - level)) / 50);
+            }
+            else if(level > 50 && level <= 68)
+            {
+                return (int)((Math.pow(level, 3) * (150 - level)) / 100);
+            }
+            else if(level > 68 && level <= 98)
+            {
+                return (int)((Math.pow(level, 3) * ((1911 - 10 * level) / 3)) / 500);
+            }
+            else if(level > 98 && level <= 100)
+            {
+                return (int)((Math.pow(level, 3) * (160 - level)) / 100);
+            }
+            else
+            {
+                throw new IllegalArgumentException("A level of " + level + " is not allowed");
+            }
+        }
+
+        private int calcFast(byte level)
+        {
+            if(level > 0 && level <= 100)
+            {
+                return (int)((4 * Math.pow(level, 3)) / 5);
+            }
+
+            throw new IllegalArgumentException("Level " + level + " is not allowed");
+        }
+    }
+    private final ExperienceGroup EXP_GROUP;
     private final GenderRatio GENDER_RATIO;
     private final short[] BASE_STATS;
     private final byte[] EV_YIELD;
@@ -55,7 +120,7 @@ public enum Species
     private boolean HAS_CALCULATED_GENDER;
 
     Species(String name, final String dexNumber, final short catchRate, short[] stats, byte expYield, byte[] evYield,
-            GenderRatio ratio, final Type... type)
+            GenderRatio ratio, ExperienceGroup group, final Type... type)
     {
         if(type.length > 2)
         {
@@ -76,6 +141,8 @@ public enum Species
 
         NAME = name;
         TYPE = type;
+
+        EXP_GROUP = group;
     }
 
     public byte[] getEVYields()
@@ -203,13 +270,8 @@ public enum Species
      * Gets the first type of the Pokemon
      * @return Their first type
      */
-    public Type getTypeOne()
+    public Type[] getType()
     {
-        return TYPE[0];
-    }
-
-    public Type getTypeTwo()
-    {
-        return TYPE.length == 2 ? TYPE[1] : getTypeOne();
+        return TYPE;
     }
 }

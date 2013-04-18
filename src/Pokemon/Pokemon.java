@@ -83,14 +83,9 @@ public class Pokemon
         return species.getName();
     }
 
-    public Type getTypeOne()
+    public Type[] getType()
     {
-        return species.getTypeOne();
-    }
-
-    public Type getTypeTwo()
-    {
-        return species.getTypeTwo();
+        return species.getType();
     }
 
     /**
