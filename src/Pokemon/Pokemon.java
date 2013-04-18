@@ -17,6 +17,7 @@ public class Pokemon
             SEEDED = 5;
     
     private Species species;
+    private final Gender GENDER;
     private final byte[] IVS;
     //Poison, Paralyze, Burn, Frozen, Asleep, Seeded
     private boolean[] status;
@@ -34,7 +35,7 @@ public class Pokemon
     {
         //Set the Species of the Pokemon (ie. Charizard, Squirtle, etc...)
         this.species = species;
-        
+        GENDER = species.getGender();
         //All Pokemon start out with no status conditions
         status = new boolean[] {false, false, false, false, false, false};
         
