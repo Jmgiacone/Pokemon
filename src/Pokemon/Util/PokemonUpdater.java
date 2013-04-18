@@ -477,12 +477,42 @@ public class PokemonUpdater
             if(line.contains("<h2> <span class=\"mw-headline\" id=\""))
             {
                 currentRatio = line.substring(line.indexOf("id=\"") + 4, line.indexOf("\">"));
+
+                switch(currentRatio)
+                {
+                    case "Male_only":
+                        currentRatio = currentRatio.toUpperCase();
+                        break;
+                    case "1_.E2.99.80_:_7_.E2.99.82":
+                        currentRatio = "ONE_FEMALE_SEVEN_MALE";
+                        break;
+                    case "1_.E2.99.80_:_3_.E2.99.82":
+                        currentRatio = "ONE_FEMALE_THREE_MALE";
+                        break;
+                    case "1_.E2.99.80_:_1_.E2.99.82":
+                        currentRatio = "ONE_FEMALE_ONE_MALE";
+                        break;
+                    case "3_.E2.99.80_:_1_.E2.99.82":
+                        currentRatio = "THREE_FEMALE_ONE_MALE";
+                        break;
+                    case "Female_only":
+                        currentRatio = currentRatio.toUpperCase();
+                        break;
+                    case "Genderless":
+                        currentRatio = currentRatio.toUpperCase();
+                        break;
+                    default:
+                        throw new IllegalStateException("The " + currentRatio + " header doesn't exist");
+                }
+                System.out.println(currentRatio + "\n\n");
             }
 
             //Tag for a Pokemon Name
-            if(line.contains("<td><a href=\"/wiki/"))
+            if(line.contains("<td><a href=\"/wiki/") && !line.contains("src=\"http://cdn.bulbagarden.net/upload/"))
             {
-                ratioName = line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_(Pok"));
+                System.out.println(line);
+                ratioName = line.substring(line.indexOf("title=\"") + 7, line.indexOf(" (Pok"));
+                System.out.println(ratioName);
 
                 //Ensuring it's an actual name
                 if(names.contains(ratioName))
@@ -549,6 +579,17 @@ public class PokemonUpdater
         String addon = ",";
         String[] parts;
 
+        for(int i = 0; i < names.size(); i++)
+        {
+            if(i < names.size() - 1)
+            {
+                if(names.get(i).equalsIgnoreCase(names.get(i + 1)) && genderRatios.get(i + 1).equalsIgnoreCase(""))
+                {
+                    genderRatios.set(i + 1, genderRatios.get(i));
+                }
+            }
+        }
+
         PrintWriter writer  = new PrintWriter(new File("Pokemon.txt"));
         for(int i = 0; i < names.size(); i++)
         {
@@ -564,7 +605,8 @@ public class PokemonUpdater
                     ", " +
                     "new short[] {" + stats.get(i) + "}, (byte)" +
                     xpYields.get(i) + ", " +
-                    "new byte[] {" + evYields.get(i) + "}, " +
+                    "new byte[] {" + evYields.get(i) + "}, GenderRatio." +
+                    genderRatios.get(i) + ", " +
                     type.get(i) +
                     ")" + addon);
             writer.flush();
