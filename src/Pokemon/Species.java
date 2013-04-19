@@ -64,13 +64,13 @@ public enum Species
                 case FAST:
                     return calcFast(level);
                 case MEDIUM_FAST:
-                    break;
+                   return calcMedFast(level);
                 case MEDIUM_SLOW:
-                    break;
+                    return calcMedSlow(level);
                 case SLOW:
-                    break;
+                    return calcSlow(level);
                 case FLUCTUATING:
-                    break;
+                    return calcFluctuating(level);
                 default:
                     throw new IllegalStateException("Enum " + this + " is illlegal");
             }
@@ -108,6 +108,56 @@ public enum Species
             }
 
             throw new IllegalArgumentException("Level " + level + " is not allowed");
+        }
+
+        private int calcMedFast(byte level)
+        {
+            if(level > 0 && level <= 100)
+            {
+                return (int)Math.pow(level, 3);
+            }
+
+            throw new IllegalArgumentException("Level " + level + " is not allowed");
+        }
+
+        private int calcMedSlow(byte level)
+        {
+            if(level > 0 && level <= 100)
+            {
+                return (int)(((6 * Math.pow(level, 3)) / 5) - (15 * Math.pow(level, 2)) + (100 * level) - 140);
+            }
+
+            throw new IllegalArgumentException("Level " + level + " is not allowed");
+        }
+
+        private int calcSlow(byte level)
+        {
+            if(level > 0 && level <= 100)
+            {
+                return (int)((5 * Math.pow(level, 3)) / 4);
+            }
+
+            throw new IllegalArgumentException("Level " + level + " is not allowed");
+        }
+
+        private int calcFluctuating(byte level)
+        {
+            if(level > 0 && level <= 15)
+            {
+                return (int)(Math.pow(level, 3) * ((((level + 1) / 3) + 24) / 50));
+            }
+            else if(level > 15 && level <= 36)
+            {
+                return (int)(Math.pow(level, 3) * ((level + 14) / 50));
+            }
+            else if(level > 36 && level <= 100)
+            {
+                return (int)(Math.pow(level, 3) * (((level / 2) + 32) / 50));
+            }
+            else
+            {
+                throw new IllegalArgumentException("A level of " + level + " is not allowed");
+            }
         }
     }
     private final ExperienceGroup EXP_GROUP;
