@@ -2,20 +2,6 @@ package Pokemon;
 
 public class Pokemon
 {
-    public static final byte
-            HP = 0,
-            ATTACK = 1,
-            DEFENSE = 2,
-            SP_ATTACK = 3,
-            SP_DEFENSE = 4,
-            SPEED = 5,
-            POISONED = 0,
-            PARALYZED = 1,
-            BURNED = 2,
-            FROZEN = 3,
-            ASLEEP = 4,
-            SEEDED = 5;
-    
     private Species species;
     private final Nature NATURE;
     private final Gender GENDER;
@@ -56,12 +42,12 @@ public class Pokemon
         evs = new byte[] {0, 0, 0, 0, 0, 0};
 
         currentStats = new short[]{
-                calculateStat(HP),
-                calculateStat(ATTACK),
-                calculateStat(DEFENSE),
-                calculateStat(SP_ATTACK),
-                calculateStat(SP_DEFENSE),
-                calculateStat(SPEED)};
+                calculateStat(Stat.HP),
+                calculateStat(Stat.ATTACK),
+                calculateStat(Stat.DEFENSE),
+                calculateStat(Stat.SP_ATTACK),
+                calculateStat(Stat.SP_DEFENSE),
+                calculateStat(Stat.SPEED)};
 
         //Copy the contents of currentStats -> inBattleStats
         System.arraycopy(currentStats, 0, inBattleStats, 0, currentStats.length);
@@ -103,10 +89,10 @@ public class Pokemon
      * @param  stat The Constant for the stat that you want to calculate
      * @return the calculated stat
      */
-    private short calculateStat(final byte stat)
+    private short calculateStat(final Stat stat)
     {
-        return (short)(stat == HP ? (((IVS[HP] + (2 * species.getBaseStat(HP)) + (evs[HP] / 4) + 100) * level) / 100) + 10 :
-                (((IVS[stat] + (2 * species.getBaseStat(stat)) + (evs[stat] / 4)) * level) / 100) + 5);
+        return (short)(stat == Stat.HP ? (((IVS[Stat.HP.byteOrdinal()] + (2 * species.getBaseStat(Stat.HP.byteOrdinal())) + (evs[Stat.HP.byteOrdinal()] / 4) + 100) * level) / 100) + 10 :
+                (((IVS[stat.byteOrdinal()] + (2 * species.getBaseStat(stat.byteOrdinal())) + (evs[stat.byteOrdinal()] / 4)) * level) / 100) + 5);
     }
 
     public short getInBattleStat(final int stat) throws ArrayIndexOutOfBoundsException
@@ -125,7 +111,7 @@ public class Pokemon
     public void resetStats()
     {
         //Ignore the HP
-        for(int i = ATTACK; i <= SPEED; i++)
+        for(int i = Stat.ATTACK.ordinal(); i <= Stat.SPEED.ordinal(); i++)
         {
             inBattleStats[i] = currentStats[i];
         }
@@ -138,7 +124,7 @@ public class Pokemon
      */
     public int getInBattleHp()
     {
-        return inBattleStats[HP];
+        return inBattleStats[Stat.HP.byteOrdinal()];
     }
 
     /**
@@ -162,9 +148,9 @@ public class Pokemon
 
         resetStats();
         //Un-neglect the HP
-        inBattleStats[HP] = currentStats[HP];
+        inBattleStats[Stat.HP.byteOrdinal()] = currentStats[Stat.HP.byteOrdinal()];
 
-        for(int i = POISONED; i <= SEEDED; i++)
+        for(int i = Status.POISONED.byteOrdinal(); i <= Status.SEEDED.byteOrdinal(); i++)
         {
             status[i] = false;
         }

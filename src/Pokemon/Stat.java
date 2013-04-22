@@ -2,5 +2,10 @@ package Pokemon;
 
 public enum Stat
 {
-    HP, ATTACK, SP_ATTACK, DEFENSE, SP_DEFENSE, SPEED
+    HP, ATTACK,  DEFENSE, SP_ATTACK, SP_DEFENSE, SPEED;
+
+    public byte byteOrdinal()
+    {
+        return (byte)ordinal();
+    }
 }
