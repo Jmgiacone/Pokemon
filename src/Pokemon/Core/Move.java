@@ -18,7 +18,7 @@ public enum Move
     FIRE_FANG("Fire Fang", Type.FIRE, 65, 15, 95, Status.BURN),
     LEECH_SEED("Leech Seed", Type.GRASS, 0, 10, 90, Stat.HP),
     VINE_WHIP("Vine Whip", Type.GRASS, 35, 15, 100),
-    POISONPOWDER("Poison Powder", Type.POISON, 0, 35, 75, Status.PSN),
+    POISONPOWDER("Poison Powder", Type.POISON, 0, 35, 75, Status.POISON),
     TAKE_DOWN("Take Down", Type.NORMAL, 90, 20, 85),
     RAZOR_LEAF("Razor Leaf", Type.GRASS, 55, 25, 95);
     

@@ -2,7 +2,7 @@ package Pokemon.Core;
 
 public enum Status
 {
-    POISONED, PARALYZED, BURNED, FROZEN, ASLEEP, SEEDED;
+    POISON, PARALYZE, BURN, FReeze, SLEEP, SEED, ACCURACY;
 
     public byte byteOrdinal()
     {
