@@ -9,6 +9,5 @@ public enum Ability
     Ability(String description)
     {
         DESCRIPTION = description;
-        ordinal();
     }
 }
