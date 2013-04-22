@@ -1,10 +1,11 @@
-package Pokedex;
+package Pokemon.Pokedex;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import Pokemon.*;
+import Pokemon.Core.Pokemon;
+import Pokemon.Core.Type;
 
 /**
  * User: Nolan
@@ -15,7 +16,7 @@ public class Pokedex {
     private List<Pokemon> list = new ArrayList<Pokemon>();
 
     /**
-     * Creates a new Pokedex object and uses the loadListFromSave method to load data from the save file specified.
+     * Creates a new Pokemon.Pokedex object and uses the loadListFromSave method to load data from the save file specified.
      * @param save The text file to load from.
      */
     public Pokedex(final String save) {
