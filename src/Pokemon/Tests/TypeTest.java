@@ -1,6 +1,6 @@
 package Pokemon.Tests;
 
-import Pokemon.Type;
+import Pokemon.Core.Type;
 import org.junit.*;
 
 import static org.junit.Assert.*;

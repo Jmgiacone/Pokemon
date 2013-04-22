@@ -1,11 +1,8 @@
 package Pokemon.Tests;
 
-import Pokemon.Gender;
-import Pokemon.Species;
-import Pokemon.Type;
+import Pokemon.Core.Gender;
+import Pokemon.Core.Species;
 import org.junit.*;
-
-import static org.junit.Assert.*;
 
 public class GenderRatioTest
 {
