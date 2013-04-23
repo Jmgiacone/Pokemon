@@ -1,4 +1,4 @@
-package Pokemon.Core;
+package pokemon.core;
 
 public class Pokemon
 {
@@ -62,6 +62,11 @@ public class Pokemon
         totalExp = (4 * (int)Math.pow(level, 3)) / 5;
 
         NATURE = Nature.values()[(int)Math.random() * Nature.values().length];
+    }
+
+    public Gender getGender()
+    {
+        return GENDER;
     }
 
     public String getName()
@@ -150,7 +155,7 @@ public class Pokemon
         //Un-neglect the HP
         inBattleStats[Stat.HP.byteOrdinal()] = currentStats[Stat.HP.byteOrdinal()];
 
-        for(int i = Status.POISONED.byteOrdinal(); i <= Status.SEEDED.byteOrdinal(); i++)
+        for(int i = Status.POISON.byteOrdinal(); i <= Status.SEED.byteOrdinal(); i++)
         {
             status[i] = false;
         }

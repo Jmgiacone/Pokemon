@@ -1,11 +1,11 @@
-package Pokemon.Pokedex;
+package pokemon.pokedex;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import Pokemon.Core.Pokemon;
-import Pokemon.Core.Type;
+import pokemon.core.Pokemon;
+import pokemon.core.Type;
 
 /**
  * User: Nolan

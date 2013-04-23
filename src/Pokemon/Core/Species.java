@@ -1,4 +1,4 @@
-package Pokemon.Core;
+package pokemon.core;
 
 import java.util.Arrays;
 

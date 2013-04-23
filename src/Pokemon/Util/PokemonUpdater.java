@@ -1,4 +1,4 @@
-package Pokemon.Util;
+package pokemon.util;
 
 import javax.swing.*;
 import java.io.*;

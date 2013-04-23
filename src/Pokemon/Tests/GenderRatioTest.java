@@ -1,15 +1,16 @@
-package Pokemon.Tests;
+package pokemon.tests;
 
-import Pokemon.Core.Gender;
-import Pokemon.Core.Species;
 import org.junit.*;
+import pokemon.core.Gender;
+import pokemon.core.Pokemon;
+import pokemon.core.Species;
 
 public class GenderRatioTest
 {
     @Test
     public void getGender() throws Exception
     {
-        Gender g = Species.GenderRatio.ONE_FEMALE_SEVEN_MALE.getGender();
+        Gender g = new Pokemon(Species.NOLAN).getGender();
         g.name();
     }
 }
