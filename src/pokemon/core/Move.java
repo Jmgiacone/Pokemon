@@ -2,7 +2,8 @@ package pokemon.core;
 
 public enum Move
 {
-    TACKLE("Tackle",Type.NORMAL, 50, 35, 100),
+    WHAT("I don't even know", Type.BUG, MoveType.PHYSICAL, 0, 0, 0);
+   /*TACKLE("Tackle",Type.NORMAL, 50, 35, 100),
     TAIL_WHIP("Tail Whip",Type.NORMAL, 0, 20, 100, Stat.DEFENSE),
     GROWL("Growl",Type.NORMAL, 0, 40, 100, Stat.ATTACK),
     SCRATCH ("Scratch",Type.NORMAL, 40, 35, 100),
@@ -20,68 +21,67 @@ public enum Move
     VINE_WHIP("Vine Whip", Type.GRASS, 35, 15, 100),
     POISONPOWDER("Poison Powder", Type.POISON, 0, 35, 75, Status.POISON),
     TAKE_DOWN("Take Down", Type.NORMAL, 90, 20, 85),
-    RAZOR_LEAF("Razor Leaf", Type.GRASS, 55, 25, 95);
+    RAZOR_LEAF("Razor Leaf", Type.GRASS, 55, 25, 95);*/
     
     private String NAME;
     private final Type TYPE;
     private final int POWER, ACCURACY;
-    private int pp, currentPP, currentPower, currentAccuracy;
+    private int pp, battlePP, battleAccuracy;
+    private final MoveType MOVE_TYPE;
     private final Status SIDE_EFFECT;
     private final Stat STAT_LOWERED;
 
-    Move(String name, Type type, int power, int pp, int accuracy)
+    Move(String name, Type type, MoveType m, int power, int pp, int accuracy)
     {
         NAME = name;
         TYPE = type;
         ACCURACY = accuracy;
+        MOVE_TYPE = m;
         POWER = power;
         this.pp = pp;
-        currentPP = pp;
-        currentPower = POWER;
+        battlePP = pp;
         SIDE_EFFECT = null;
         STAT_LOWERED = null;
     }
 
-    Move(String name, Type type, int power, int pp, int accuracy, Status s)
+    /*Move(String name, Type type, MoveType m, int power, int pp, int accuracy, Status s)
     {
         NAME = name;
         TYPE = type;
         ACCURACY = accuracy;
         POWER = power;
         this.pp = pp;
-        currentPP = pp;
-        currentPower = POWER;
+        battlePP = pp;
         SIDE_EFFECT = s;
         STAT_LOWERED = null;
     }
 
 
-    Move(String name, Type type, int power, int pp, int accuracy, Stat s)
+    Move(String name, Type type, MoveType m, int power, int pp, int accuracy, Stat s)
     {
         NAME = name;
         TYPE = type;
         ACCURACY = accuracy;
         POWER = power;
         this.pp = pp;
-        currentPP = pp;
-        currentPower = POWER;
+        battlePP = pp;
         SIDE_EFFECT = null;
         STAT_LOWERED = s;
     }
 
 
-    Move(String name, Type type, int power, int pp, int accuracy, Status status, Stat stat)
+    Move(String name, Type type, MoveType m, int power, int pp, int accuracy, Status status, Stat stat)
     {
         NAME = name;
         TYPE = type;
         ACCURACY = accuracy;
         POWER = power;
         this.pp = pp;
-        currentPP = pp;
-        currentPower = POWER;
+        battlePP = pp;
+        ;
         SIDE_EFFECT = status;
         STAT_LOWERED = stat;
-    }
+    }*/
 
     public int getPower()
     {
@@ -90,17 +90,17 @@ public enum Move
     
     public void setPP(int PP)
     {
-        currentPP = PP;
+        battlePP = PP;
     }
     
     public void downPP()
     {
-        currentPP--;
+        battlePP--;
     }
     
     public int getCurrentPP()
     {
-        return currentPP;
+        return battlePP;
     }
     
     public int getTotalPP()
@@ -110,17 +110,17 @@ public enum Move
     
     public void addPP(int PP)
     {
-        currentPP += PP;
+        battlePP += PP;
     }
 
     public void resetAccuracy()
     {
-        currentAccuracy = ACCURACY;
+        battleAccuracy = ACCURACY;
     }
 
     public void resetPP()
     {
-        currentPP = pp;
+        battlePP = pp;
     }
     
     public String getName()
@@ -136,9 +136,5 @@ public enum Move
     public int getAccuracy()
     {
         return ACCURACY;
-    }
-    public int getCurrentPower()
-    {
-        return currentPower;
     }
 }
