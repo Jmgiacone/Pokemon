@@ -4,8 +4,7 @@ import javax.swing.*;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 public class PokemonUpdater
 {
@@ -14,14 +13,16 @@ public class PokemonUpdater
         URL statsUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_base_stats"),
             typeUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/Natdex#Generation_VI"),
             evYieldUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_effort_value_yield"),
-            genderRationUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_gender_ratio");
+            genderRationUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_gender_ratio"),
+            abilityUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/Ability");
 
         BufferedReader inStats = new BufferedReader(new InputStreamReader(statsUrl.openStream())),
             inTypes = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
             inDex = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
             inNames = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
             inYields = new BufferedReader(new InputStreamReader(evYieldUrl.openStream())),
-            inGenderRatio = new BufferedReader(new InputStreamReader(genderRationUrl.openStream()));
+            inGenderRatio = new BufferedReader(new InputStreamReader(genderRationUrl.openStream())),
+            inAbilities = new BufferedReader(new InputStreamReader(abilityUrl.openStream()));
 
         Scanner reader = new Scanner(new File("Catch rate html.txt"));
 
@@ -33,6 +34,7 @@ public class PokemonUpdater
                 evYields = new ArrayList<>(),
                 xpYields = new ArrayList<>(),
                 genderRatios = new ArrayList<>();
+        Map<String, String> abilities = new TreeMap<>();
 
         for(int i = 0; i < 680; i++)
         {
@@ -502,7 +504,6 @@ public class PokemonUpdater
                     default:
                         throw new IllegalStateException("The " + currentRatio + " header doesn't exist");
                 }
-                System.out.println(currentRatio + "\n\n");
             }
 
             //Tag for a Pokemon Name
@@ -565,7 +566,22 @@ public class PokemonUpdater
             }
         }
 
-        String addon = ",";
+        String ability = null, desc;
+        while((line = inAbilities.readLine()) != null)
+        {
+            if(line.contains("<td align=\"center\"> <a href=\"/wiki/"))
+            {
+                ability = line.substring(line.indexOf("title=\"") + 7, line.indexOf(" (Ability)")).toUpperCase();
+            }
+            else if(line.contains("<td align=\"left\"> ") && ability != null)
+            {
+                desc = line.substring(line.indexOf("\"left\"> ") +8);
+                String[] parts = ability.split(" ");
+                abilities.put(parts.length > 1 ? parts[0] + "_" + parts[1] : ability, desc);
+            }
+        }
+
+        String addon = ",\n";
         String[] parts;
 
         for(int i = 0; i < names.size(); i++)
@@ -587,7 +603,7 @@ public class PokemonUpdater
             {
                 addon = ";";
             }
-            writer.println(names.get(i).toUpperCase() +
+            writer.print(names.get(i).toUpperCase() +
                     "(" + "\"" + names.get(i) +
                     "\", \"" + dexNum.get(i) +
                     "\", (short)" + catchRates.get(i) +
@@ -599,6 +615,26 @@ public class PokemonUpdater
                     type.get(i) +
                     ")" + addon);
             writer.flush();
+        }
+
+        writer = new PrintWriter(new File("Ability.txt"));
+        int counter = 0;
+        String ab = "";
+        addon = ",\n";
+
+        Iterator it = abilities.keySet().iterator();
+
+        while(it.hasNext())
+        {
+            if(counter == abilities.size() - 1)
+            {
+                addon = ";";
+            }
+
+            ab = (String)it.next();
+            writer.print(ab + "(" + "\"" + abilities.get(ab) + "\")" + addon);
+            writer.flush();
+            counter++;
         }
 
         JOptionPane.showMessageDialog(null, "Pokemon Update Complete!");
