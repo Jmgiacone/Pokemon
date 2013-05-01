@@ -5,7 +5,7 @@ import java.util.Arrays;
 public enum Species
 {
     NOLAN("Nolan", "000", (short)1, new short[] {127,127,127,127,127,127}, (byte)0,new byte[] {1, 1, 1, 1, 1, 1},
-            GenderRatio.GENDERLESS, ExperienceGroup.FLUCTUATING, Type.DARK);
+            GenderRatio.GENDERLESS, ExperienceGroup.FLUCTUATING, null, null, Type.DARK);
 
     private enum GenderRatio
     {
@@ -72,7 +72,7 @@ public enum Species
                 case FLUCTUATING:
                     return calcFluctuating(level);
                 default:
-                    throw new IllegalStateException("Enum " + this + " is illlegal");
+                    throw new IllegalStateException("Enum " + this.toString().toLowerCase() + " is illlegal");
             }
         }
 
@@ -161,6 +161,7 @@ public enum Species
         }
     }
     private final ExperienceGroup EXP_GROUP;
+    private final Species[] EVOLUTION, PREVOLUTION;
     private final GenderRatio GENDER_RATIO;
     private final short[] BASE_STATS;
     private final byte[] EV_YIELD;
@@ -169,8 +170,8 @@ public enum Species
     private final short CATCH_RATE;
     private boolean HAS_CALCULATED_GENDER;
 
-    Species(String name, final String dexNumber, final short catchRate, short[] stats, byte expYield, byte[] evYield,
-            GenderRatio ratio, ExperienceGroup group, final Type... type)
+    Species(final String name, final String dexNumber, final short catchRate, final short[] stats, byte expYield, byte[] evYield,
+            GenderRatio ratio, ExperienceGroup group, final Species[] evolvesTo, Species[] evolvesFrom, final Type... type)
     {
         if(type.length > 2)
         {
@@ -192,9 +193,92 @@ public enum Species
         NAME = name;
         TYPE = type;
 
+        if(evolvesFrom != null)
+        {
+            switch(evolvesFrom.length)
+            {
+                case 1:
+                    PREVOLUTION = new Species[]{evolvesFrom[0]};
+                    break;
+                case 2:
+                    PREVOLUTION = new Species[]{evolvesFrom[0], evolvesFrom[1]};
+                    break;
+                case 3:
+                    PREVOLUTION = new Species[]{evolvesFrom[0], evolvesFrom[1], evolvesFrom[2]};
+                    break;
+                default:
+                    PREVOLUTION = new Species[]{evolvesFrom[0], evolvesFrom[1], evolvesFrom[2], evolvesFrom[3]};
+                    break;
+            }
+        }
+        else
+        {
+            PREVOLUTION = null;
+        }
+
+        if(evolvesTo != null)
+        {
+            switch(evolvesTo.length)
+            {
+                case 1:
+                    EVOLUTION = new Species[]{evolvesTo[0]};
+                    break;
+                case 2:
+                    EVOLUTION = new Species[]{evolvesTo[0], evolvesTo[1]};
+                    break;
+                case 3:
+                    EVOLUTION = new Species[]{evolvesTo[0], evolvesTo[1], evolvesTo[2]};
+                    break;
+                default:
+                    EVOLUTION = new Species[]{evolvesTo[0], evolvesTo[1], evolvesTo[2], evolvesTo[3]};
+                    break;
+            }
+        }
+        else
+        {
+            EVOLUTION = null;
+        }
+
         EXP_GROUP = group;
     }
 
+    public boolean hasPreEvolutions()
+    {
+        return PREVOLUTION != null;
+    }
+
+    public boolean hasEvolutions()
+    {
+        return EVOLUTION != null;
+    }
+
+    public int calculateExp(byte level)
+    {
+        return EXP_GROUP.getExpForLevel(level);
+    }
+
+    public boolean hasPreEvolution(Species s)
+    {
+        return contains(PREVOLUTION, s);
+    }
+
+    public boolean hasEvolution(Species s)
+    {
+        return contains(EVOLUTION, s);
+    }
+
+    private boolean contains(Species[] spec, Species s)
+    {
+        for(Species species : spec)
+        {
+            if(species == s)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     public byte[] getEVYields()
     {
         return EV_YIELD;
