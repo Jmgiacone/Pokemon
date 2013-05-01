@@ -174,4 +174,9 @@ public enum Ability
     {
         DESCRIPTION = description;
     }
+
+    public final String getDescription()
+    {
+        return DESCRIPTION;
+    }
 }
