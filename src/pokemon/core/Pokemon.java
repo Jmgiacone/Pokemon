@@ -2,15 +2,18 @@ package pokemon.core;
 
 public class Pokemon
 {
+    private String nickname;
     private Species species;
     private final Nature NATURE;
     private final Gender GENDER;
     private final byte[] IVS;
+
     //Poison, Paralyze, Burn, Frozen, Asleep, Seeded
     private boolean[] status;
 
     //Byte -128 -> 127
     private byte level;
+
     private int totalExpForNextLevel, totalExp;
 
     //HP, Attack, Defense, Sp. Attack, Sp. Defense, Speed
@@ -18,6 +21,15 @@ public class Pokemon
     private byte[] evs;
     private Move[] moveSet;
 
+    public Pokemon(String nickname, Species s)
+    {
+        this(s);
+        this.nickname = nickname;
+    }
+    /**
+     * Creates a brand new Pokemon based on a given species. This Pokemon will start at level 5. If you want to evolve a Pokemon, use the copy constructor.
+     * @param species The Pokemon Species that this Pokemon will be based off of
+     */
     public Pokemon(Species species)
     {
         //Set the Species of the Pokemon (ie. Charizard, Squirtle, etc...)
@@ -25,8 +37,9 @@ public class Pokemon
         GENDER = species.getGender();
         //All Pokemon start out with no status conditions
         status = new boolean[] {false, false, false, false, false, false};
-        
-        //Needs to be a short because get bigger than 128
+
+        nickname = species.getName();
+        //Needs to be a short because it can get bigger than 128
         inBattleStats = new short[6];
         moveSet = new Move[4];
         
@@ -55,13 +68,38 @@ public class Pokemon
         //All Pokemon start at level 1
         level = 5;
 
-        //Exp for next level = (4 * (level + 1)^3) / 5
-        totalExpForNextLevel = (4 * (int)Math.pow(level + 1, 3)) / 5;
+        totalExpForNextLevel = species.calculateExp((byte)(level + 1));
 
-        //Total XP = (4 * level^3) / 5
-        totalExp = (4 * (int)Math.pow(level, 3)) / 5;
+        totalExp = species.calculateExp((byte)(level + 1));
 
         NATURE = Nature.values()[(int)Math.random() * Nature.values().length];
+    }
+
+    public Pokemon(Species evolveTo, Pokemon p)
+    {
+        species = evolveTo;
+
+        level = p.level;
+        NATURE = p.NATURE;
+        GENDER = p.GENDER;
+
+        status = new boolean[] {p.status[0], p.status[1], p.status[2], p.status[3], p.status[4], p.status[5]};
+
+        IVS = new byte[] {p.IVS[0], p.IVS[1], p.IVS[2], p.IVS[3], p.IVS[4], p.IVS[5]};
+        evs = new byte[] {p.evs[0], p.evs[1], p.evs[2], p.evs[3], p.evs[4], p.evs[5]};
+
+        currentStats = new short[]{
+                calculateStat(Stat.HP),
+                calculateStat(Stat.ATTACK),
+                calculateStat(Stat.DEFENSE),
+                calculateStat(Stat.SP_ATTACK),
+                calculateStat(Stat.SP_DEFENSE),
+                calculateStat(Stat.SPEED)};
+
+        System.arraycopy(currentStats, 0, inBattleStats, 0, currentStats.length);
+
+        totalExpForNextLevel = species.calculateExp((byte)(level + 1));
+        totalExp = p.totalExp;
     }
 
     public Gender getGender()
