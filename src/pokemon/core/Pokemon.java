@@ -21,6 +21,11 @@ public class Pokemon
     private byte[] evs;
     private Move[] moveSet;
 
+    /**
+     * Creates a new Pokemon with a nickname.
+     * @param nickname The nickname of the Pokemon.
+     * @param s The Pokemon Species that this Pokemon will be based off of.
+     */
     public Pokemon(String nickname, Species s)
     {
         this(s);
@@ -28,7 +33,7 @@ public class Pokemon
     }
     /**
      * Creates a brand new Pokemon based on a given species. This Pokemon will start at level 5. If you want to evolve a Pokemon, use the copy constructor.
-     * @param species The Pokemon Species that this Pokemon will be based off of
+     * @param species The Pokemon Species that this Pokemon will be based off of.
      */
     public Pokemon(Species species)
     {
