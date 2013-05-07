@@ -21,6 +21,11 @@ public class Pokemon
     private byte[] evs;
     private Move[] moveSet;
 
+    /**
+     * Creates a new Pokemon with a nickname.
+     * @param nickname The nickname of the Pokemon.
+     * @param s The Pokemon Species that this Pokemon will be based off of.
+     */
     public Pokemon(String nickname, Species s)
     {
         this(s);
@@ -28,7 +33,7 @@ public class Pokemon
     }
     /**
      * Creates a brand new Pokemon based on a given species. This Pokemon will start at level 5. If you want to evolve a Pokemon, use the copy constructor.
-     * @param species The Pokemon Species that this Pokemon will be based off of
+     * @param species The Pokemon Species that this Pokemon will be based off of.
      */
     public Pokemon(Species species)
     {
@@ -75,6 +80,11 @@ public class Pokemon
         NATURE = Nature.values()[(int)Math.random() * Nature.values().length];
     }
 
+    /**
+     * Copy constructor that creates a new Pokemon with an evolution.
+     * @param evolveTo The species the Pokemon evolves to.
+     * @param p The Pokemon that will be copied and evolved.
+     */
     public Pokemon(Species evolveTo, Pokemon p)
     {
         species = evolveTo;
@@ -102,25 +112,36 @@ public class Pokemon
         totalExp = p.totalExp;
     }
 
+    /**
+     * Gets the Pokemon's Gender.
+     * @return GENDER The Pokemon's Gender.
+     */
     public Gender getGender()
     {
         return GENDER;
     }
 
+    /**
+     * Gets the Pokemon's name.
+     * @return The Pokemon's name.
+     */
     public String getName()
     {
         return species.getName();
     }
 
+    /**
+     * Gets the Pokemon's Type.
+     * @return The Pokemon's Type.
+     */
     public Type[] getType()
     {
         return species.getType();
     }
 
     /**
-     * Returns the level of the Pokemon
-     *
-     * @return level
+     * Gets the level of the Pokemon.
+     * @return level The level of the Pokemon.
      */
     public int getLevel()
     {
@@ -128,7 +149,7 @@ public class Pokemon
     }
 
     /**
-     * Calculates any stat
+     * Calculates any stat.
      * @param  stat The Constant for the stat that you want to calculate
      * @return the calculated stat
      */
@@ -138,11 +159,23 @@ public class Pokemon
                 (((IVS[stat.byteOrdinal()] + (2 * species.getBaseStat(stat.byteOrdinal())) + (evs[stat.byteOrdinal()] / 4)) * level) / 100) + 5);
     }
 
+    /**
+     * Gets any battle stat of the Pokemon.
+     * @param stat The in battle stat to get.
+     * @return The in battle stat of the Pokemon.
+     * @throws ArrayIndexOutOfBoundsException
+     */
     public short getInBattleStat(final int stat) throws ArrayIndexOutOfBoundsException
     {
         return inBattleStats[stat];
     }
 
+    /**
+     * Gets any current stat of the Pokemon.
+     * @param stat The current stat to get.
+     * @return The current stat of the Pokemon.
+     * @throws ArrayIndexOutOfBoundsException
+     */
     public short getCurrentStat(final int stat) throws ArrayIndexOutOfBoundsException
     {
         return currentStats[stat];
@@ -161,9 +194,8 @@ public class Pokemon
     }
 
     /**
-     * This returns current HP
-     *
-     * @return current health
+     * Gets the current HP of the Pokemon.
+     * @return Current HP of the Pokemon.
      */
     public int getInBattleHp()
     {
@@ -171,10 +203,8 @@ public class Pokemon
     }
 
     /**
-     * This is how the Pokemon gains totalExperience
-     *
-     * @param newExp the totalExp to be added
-     * @return void
+     * This is how the Pokemon gains totalExperience.
+     * @param newExp the totalExp to be added.
      */
     public void addExp(int newExp)
     {
