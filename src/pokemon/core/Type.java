@@ -72,7 +72,7 @@ public enum Type
 
         for(String type : t)
         {
-            if(type.equalsIgnoreCase(t + ""))
+            if(type.equalsIgnoreCase(p + ""))
             {
                 return true;
             }
