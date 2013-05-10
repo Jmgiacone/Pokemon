@@ -581,7 +581,7 @@ public class PokemonUpdater
             if(line.contains("<a href=\"/wiki/") && line.contains("_(move)\" title=\""))
             {
                 String str = line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_(move)"));
-                moveLine = str.toUpperCase() + "(\"" + str.replace("_", " ") + "\", ";
+                moveLine = (str.replace("-", "_")).toUpperCase() + "(\"" + str.replace("_", " ") + "\", ";
             }
             //The type of said Move
             else if(line.contains("<a href=\"/wiki/") && line.contains("_(type)\""))
