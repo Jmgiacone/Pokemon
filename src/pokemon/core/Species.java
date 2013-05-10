@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public enum Species
 {
-    NOLAN("Nolan", "000", (short)1, new short[] {127,127,127,127,127,127}, (byte)0,new byte[] {1, 1, 1, 1, 1, 1},
-            GenderRatio.GENDERLESS, ExperienceGroup.FLUCTUATING, null, null, Type.DARK);
+    NOLAN("Nolan", "000", (short)1, new short[] {127,127,127,127,127,127}, (byte)0, new byte[] {1, 1, 1, 1, 1, 1},
+            GenderRatio.GENDERLESS, ExperienceGroup.FLUCTUATING, null, null, null, Type.DARK);
 
     private enum GenderRatio
     {
