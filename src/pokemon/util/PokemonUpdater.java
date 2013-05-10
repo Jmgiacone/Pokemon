@@ -10,11 +10,14 @@ public class PokemonUpdater
 {
     public static void main(String[] args) throws MalformedURLException, IOException
     {
+        System.out.println();
         URL statsUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_base_stats"),
             typeUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/Natdex#Generation_VI"),
             evYieldUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_effort_value_yield"),
             genderRationUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_gender_ratio"),
-            abilityUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/Ability");
+            abilityUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/Ability"),
+            pokemonAbilityUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_Ability"),
+            movesUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_moves");
 
         BufferedReader inStats = new BufferedReader(new InputStreamReader(statsUrl.openStream())),
             inTypes = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
@@ -22,7 +25,9 @@ public class PokemonUpdater
             inNames = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
             inYields = new BufferedReader(new InputStreamReader(evYieldUrl.openStream())),
             inGenderRatio = new BufferedReader(new InputStreamReader(genderRationUrl.openStream())),
-            inAbilities = new BufferedReader(new InputStreamReader(abilityUrl.openStream()));
+            inAbilities = new BufferedReader(new InputStreamReader(abilityUrl.openStream())),
+            inPokemonAbilities = new BufferedReader(new InputStreamReader(pokemonAbilityUrl.openStream())),
+            inMoves = new BufferedReader(new InputStreamReader(movesUrl.openStream()));
 
         Scanner reader = new Scanner(new File("Catch rate html.txt"));
 
@@ -33,12 +38,15 @@ public class PokemonUpdater
                 type = new ArrayList<>(),
                 evYields = new ArrayList<>(),
                 xpYields = new ArrayList<>(),
-                genderRatios = new ArrayList<>();
+                genderRatios = new ArrayList<>(),
+                pokemonAbilities = new ArrayList<>(),
+                moves = new ArrayList<>();
         Map<String, String> abilities = new TreeMap<>();
 
         for(int i = 0; i < 680; i++)
         {
             genderRatios.add("");
+            pokemonAbilities.add("");
         }
 
         int count = 0, stat, loopNum = 1;
@@ -565,6 +573,52 @@ public class PokemonUpdater
                 }
             }
         }
+        String powerPPAcc = "", moveLine = "";
+        count = 0;
+        while((line = inMoves.readLine()) != null && !moveLine.contains("Fusion Bolt"))
+        {
+            //The name of a Move
+            if(line.contains("<a href=\"/wiki/") && line.contains("_(move)\" title=\""))
+            {
+                String str = line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_(move)"));
+                moveLine = str.toUpperCase() + "(\"" + str.replace("_", " ") + "\", ";
+            }
+            //The type of said Move
+            else if(line.contains("<a href=\"/wiki/") && line.contains("_(type)\""))
+            {
+                moveLine += "Type." + line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_(type")).toUpperCase() + ", ";
+            }
+            //The MoveType of said Move
+            else if(line.contains("<a href=\"/wiki/") && line.contains("_move\" title=\""))
+            {
+                moveLine += "MoveType." + line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_move")) + ", ";
+            }
+            else if(line.startsWith("<td>") && !line.equalsIgnoreCase("<td>") && !moveLine.equalsIgnoreCase(""))
+            {
+                if(line.contains("%"))
+                {
+                     line = line.substring(0, line.indexOf("%"));
+                }
+                try
+                {
+                    powerPPAcc += Short.parseShort(line.substring(line.indexOf(">") + 2).trim()) + ", ";
+                    count++;
+                }
+                catch(NumberFormatException e)
+                {
+                    Math.random();
+                }
+
+                if(count == 3)
+                {
+                    count = 0;
+                    powerPPAcc = powerPPAcc.substring(0, powerPPAcc.length() - 2) + "";
+                    moves.add(moveLine + powerPPAcc +")");
+                    moveLine = "";
+                    powerPPAcc = "";
+                }
+            }
+        }
 
         String ability = null, desc;
         while((line = inAbilities.readLine()) != null)
@@ -635,6 +689,21 @@ public class PokemonUpdater
             writer.print(ab + "(" + "\"" + abilities.get(ab) + "\")" + addon);
             writer.flush();
             counter++;
+        }
+
+        writer = new PrintWriter("Moves.txt");
+
+        for(int i = 0; i < moves.size(); i++)
+        {
+            if(i == moves.size() - 1)
+            {
+                writer.println(moves.get(i) + ";");
+            }
+            else
+            {
+                writer.println(moves.get(i) + ",");
+            }
+            writer.flush();
         }
 
         JOptionPane.showMessageDialog(null, "Pokemon Update Complete!");
