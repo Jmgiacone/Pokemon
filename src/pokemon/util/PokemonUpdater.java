@@ -575,7 +575,7 @@ public class PokemonUpdater
         }
         String powerPPAcc = "", moveLine = "";
         count = 0;
-        while((line = inMoves.readLine()) != null && !moveLine.contains("Fusion Bolt"))
+        while((line = inMoves.readLine()) != null && !moveLine.contains("Shadow Blitz"))
         {
             //The name of a Move
             if(line.contains("<a href=\"/wiki/") && line.contains("_(move)\" title=\""))
@@ -591,7 +591,7 @@ public class PokemonUpdater
             //The MoveType of said Move
             else if(line.contains("<a href=\"/wiki/") && line.contains("_move\" title=\""))
             {
-                moveLine += "MoveType." + line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_move")) + ", ";
+                moveLine += "MoveType." + line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_move")).toUpperCase() + ", ";
             }
             else if(line.startsWith("<td>") && !line.equalsIgnoreCase("<td>") && !moveLine.equalsIgnoreCase(""))
             {
@@ -599,14 +599,31 @@ public class PokemonUpdater
                 {
                      line = line.substring(0, line.indexOf("%"));
                 }
+
                 try
                 {
-                    powerPPAcc += Short.parseShort(line.substring(line.indexOf(">") + 2).trim()) + ", ";
+                    line = line.replace(" ", "");
+                    String string = line.substring(line.indexOf(">") + 1).trim();
+                    if(line.contains("&#8212;") || line.contains("<span class=\"explain\" title=\"Always deals"))
+                    {
+                        powerPPAcc += (count == 1 ? "(short)" : "(byte)") + -1 +", ";
+                    }
+                    //There is a star with hover abilities
+                    else if(line.contains("<span"))
+                    {
+                        string = string.substring(0, string.indexOf("<span"));
+                        powerPPAcc += (count == 1 ? "(short)" : "(byte)") + Short.parseShort(string) + ", ";
+                    }
+                    else
+                    {
+                        powerPPAcc += (count == 1 ? "(short)" : "(byte)") + Short.parseShort(string) + ", ";
+                    }
+
                     count++;
                 }
                 catch(NumberFormatException e)
                 {
-                    Math.random();
+                    //Get GG'ed
                 }
 
                 if(count == 3)
@@ -697,7 +714,7 @@ public class PokemonUpdater
         {
             if(i == moves.size() - 1)
             {
-                writer.println(moves.get(i) + ";");
+                writer.print(moves.get(i) + ";");
             }
             else
             {
