@@ -1,5 +1,7 @@
 package pokemon.core;
 
+import java.awt.*;
+
 public class Pokemon
 {
     private String nickname;
@@ -20,6 +22,10 @@ public class Pokemon
     private short[] currentStats, inBattleStats;
     private byte[] evs;
     private Move[] moveSet;
+
+    private Image pokedexImage,
+                  fromBackImage,
+                  fromFrontImage;
 
     /**
      * Creates a new Pokemon with a nickname.
