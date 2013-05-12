@@ -2,6 +2,9 @@ package pokemon.interactive;
 
 import pokemon.core.Pokemon;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Nolan
@@ -10,13 +13,10 @@ import pokemon.core.Pokemon;
  * To change this template use File | Settings | File Templates.
  */
 public class Bag {
-    private Pokemon[] pokemonSlots;
+    private Map items;
 
     public Bag() {
-        pokemonSlots = new Pokemon[6];
-    }
-
-    public Pokemon[] getPokemonSlots() {
-        return pokemonSlots;
+        //TODO - add item class, change first key to Item
+        items = new HashMap<Integer, Integer>();
     }
 }
