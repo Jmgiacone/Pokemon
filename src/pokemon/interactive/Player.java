@@ -41,6 +41,15 @@ public class Player {
         return this.party;
     }
 
+    public boolean isPartyEmpty() {
+        for(final Pokemon p : getParty()) {
+            if(p != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Attempts to add a <code>Pokemon</code> to your party.
      * @param pokemon <code>Pokemon</code> to add to the party.
