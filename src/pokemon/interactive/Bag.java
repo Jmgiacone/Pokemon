@@ -19,4 +19,8 @@ public class Bag {
         //TODO - add item class, change first key to Item
         items = new HashMap<Integer, Integer>();
     }
+
+    public Map getMap() {
+        return this.items;
+    }
 }
