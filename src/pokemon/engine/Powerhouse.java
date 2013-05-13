@@ -31,6 +31,8 @@ public class Powerhouse {
         }
         if(player.isPartyEmpty()) {
             print("Failed to add pokemon to your party, you must choose one of the three starter pokemon.", true);
+        } else {
+            print("Player contents: " + player.toString(), false);
         }
     }
 
