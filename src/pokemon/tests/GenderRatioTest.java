@@ -10,7 +10,7 @@ public class GenderRatioTest
     @Test
     public void getGender() throws Exception
     {
-        Gender g = new Pokemon(Species.NOLAN).getGender();
+        Gender g = new Pokemon(Species.BULBASAUR).getGender();
         g.name();
     }
 }
