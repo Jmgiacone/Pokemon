@@ -17,7 +17,8 @@ public class PokemonUpdater
             genderRationUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_gender_ratio"),
             abilityUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/Ability"),
             pokemonAbilityUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_Ability"),
-            movesUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_moves");
+            movesUrl = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_moves"),
+            expGroupsURL = new URL("http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_experience_type");
 
         BufferedReader inStats = new BufferedReader(new InputStreamReader(statsUrl.openStream())),
             inTypes = new BufferedReader(new InputStreamReader(typeUrl.openStream())),
@@ -28,7 +29,8 @@ public class PokemonUpdater
             inAbilities = new BufferedReader(new InputStreamReader(abilityUrl.openStream())),
             inPokemonAbilities = new BufferedReader(new InputStreamReader(pokemonAbilityUrl.openStream())),
             inMoves = new BufferedReader(new InputStreamReader(movesUrl.openStream())),
-            inPokemonMoves;
+            inPokemonMoves,
+            inExperienceGroups = new BufferedReader(new InputStreamReader(expGroupsURL.openStream()));
 
         Scanner reader = new Scanner(new File("Catch rate html.txt"));
 
@@ -43,7 +45,8 @@ public class PokemonUpdater
                 pokemonAbilities = new ArrayList<>(),
                 moves = new ArrayList<>(),
                 pokemonMovesMoves = new ArrayList<>(),
-                pokemonMovesIntegers = new ArrayList<>();
+                pokemonMovesIntegers = new ArrayList<>(),
+                experienceGroups = new ArrayList<>();
         Map<String, String> abilities = new TreeMap<>();
 
         for(int i = 0; i < 680; i++)
@@ -639,6 +642,7 @@ public class PokemonUpdater
                 }
             }
         }
+
         int index = 1;
         inPokemonMoves = new BufferedReader(
                 new InputStreamReader(
@@ -649,7 +653,6 @@ public class PokemonUpdater
         System.out.println(0 + ": " + "Bulbasaur");
         while(index <= names.size() && (line = inPokemonMoves.readLine()) != null)
         {
-            //System.out.println(line);
             if(line.contains("<td style=\"background:#FFFFFF; border:1px solid #D8D8D8;\"> <span style=\"display:none\">") ||
                line.contains("<td style=\"background:#FFFFFF; text-align:center; border:1px solid #D8D8D8; background:#EDDFE0; color:#2B3134\">") &&
                     individualLevel.equals(""))
@@ -692,12 +695,95 @@ public class PokemonUpdater
                     inPokemonMoves = new BufferedReader(
                             new InputStreamReader(
                                     new URL("http://bulbapedia.bulbagarden.net/wiki/" + names.get(index)
-                                            + "_(Pok%C3%A9mon)#By_leveling_up").openStream()));
+                                            + "_(Pok%C3%A9mon)#By_leveling" +
+                                            "_up").openStream()));
                     index++;
                 }
             }
         }
         inPokemonMoves.close();
+
+        loopNum = 1;
+        while((line = inExperienceGroups.readLine()) != null)
+        {
+            if(line.contains("<a href=\"/wiki/") && line.contains("_(Pok%C3%A9mon)\"") && !line.contains("<img alt=\""))
+            {
+                switch(line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_(Pok")))
+                {
+                    case "Castform":
+                        loopNum = 4;
+                        break;
+                    case "Deoxys":
+                        loopNum = 4;
+                        break;
+                    case "Burmy":
+                        loopNum = 3;
+                        break;
+                    case "Wormadam":
+                        loopNum = 3;
+                        break;
+                    case "Shellos":
+                        loopNum = 2;
+                        break;
+                    case "Gastrodon":
+                        loopNum = 2;
+                        break;
+                    case "Rotom":
+                        loopNum = 6;
+                        break;
+                    case "Giratina":
+                        loopNum = 2;
+                        break;
+                    case "Shaymin":
+                        loopNum = 2;
+                        break;
+                    case "Basculin":
+                        loopNum = 2;
+                        break;
+                    case "Darmanitan":
+                        loopNum = 2;
+                        break;
+                    case "Landorus":
+                        loopNum = 2;
+                        break;
+                    case "Thundurus":
+                        loopNum = 2;
+                        break;
+                    case "Tornadus":
+                        loopNum = 2;
+                        break;
+                    case "Kyurem":
+                        loopNum = 3;
+                        break;
+                    case "Keldeo":
+                        loopNum = 2;
+                        break;
+                    case "Meloetta":
+                        loopNum = 2;
+                        break;
+                    case "Unfezant":
+                        loopNum = 2;
+                        break;
+                    case "Frillish":
+                        loopNum = 2;
+                        break;
+                    case "Jellicent":
+                        loopNum = 2;
+                        break;
+                    default:
+                        loopNum = 1;
+                        break;
+                }
+            }
+            else if(line.contains("<a href=\"/wiki/Experience#") && line.contains("\" title=\"Experience\">"))
+            {
+                for(int i = 0; i < loopNum; i++)
+                {
+                    experienceGroups.add(line.substring(line.indexOf("#") + 1, line.indexOf("\" title=")));
+                }
+            }
+        }
+
         /*String ability = null, desc;
         while((line = inAbilities.readLine()) != null)
         {
@@ -744,6 +830,7 @@ public class PokemonUpdater
                     xpYields.get(i) + ", " +
                     "new byte[] {" + evYields.get(i) + "}, GenderRatio." +
                     genderRatios.get(i) + ", " +
+                    "ExperienceGroup." + experienceGroups.get(i).toUpperCase() + "," +
                     "convertToMap(new int[] {" + pokemonMovesIntegers.get(i) + "}, new Move[] {" + pokemonMovesMoves.get(i) + "}), " +
                     type.get(i) +
                     ")" + addon);
