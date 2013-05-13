@@ -643,66 +643,6 @@ public class PokemonUpdater
             }
         }
 
-        int index = 1;
-        inPokemonMoves = new BufferedReader(
-                new InputStreamReader(
-                        new URL("http://bulbapedia.bulbagarden.net/wiki/" + names.get(0)
-                                + "_(Pok%C3%A9mon)#By_leveling_up").openStream()));
-        String individualLevel = "", individualMove, levelString = "", moveString = "";
-
-        System.out.println(0 + ": " + "Bulbasaur");
-        while(index <= names.size() && (line = inPokemonMoves.readLine()) != null)
-        {
-            if(line.contains("<td style=\"background:#FFFFFF; border:1px solid #D8D8D8;\"> <span style=\"display:none\">") ||
-               line.contains("<td style=\"background:#FFFFFF; text-align:center; border:1px solid #D8D8D8; background:#EDDFE0; color:#2B3134\">") &&
-                    individualLevel.equals(""))
-            {
-                String str = line.substring(line.indexOf("</span>") + 7);
-
-                if(str.equalsIgnoreCase("N/A"))
-                {
-                    str = -1 + "";
-                }
-                else if(str.equalsIgnoreCase("Start"))
-                {
-                    str = 0 + "";
-                }
-                individualLevel +=  str;
-
-
-            }
-            else if(line.contains("<td style=\"background:#FFFFFF; border:1px solid #D8D8D8;\">") && line.contains("<a href=\"/wiki/") && line.contains("_(move)"))
-            {
-                moveString += "Move." + line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_(move)")).toUpperCase() + ", ";
-                levelString += individualLevel + ", ";
-                individualLevel = "";
-                for(int i = 0; i < 10; i++)
-                {
-                    inPokemonMoves.readLine();
-                }
-            }
-            if(line.contains("<ul><li>A level of \"Start\" indicates a move that will be known by a"))
-            {
-                pokemonMovesMoves.add(moveString.substring(0, moveString.length() - 2));
-                pokemonMovesIntegers.add(levelString.substring(0, levelString.length() - 2));
-                moveString = "";
-                levelString = "";
-
-                if(index < names.size())
-                {
-                    inPokemonMoves.close();
-                    System.out.println(index + ": " + names.get(index));
-                    inPokemonMoves = new BufferedReader(
-                            new InputStreamReader(
-                                    new URL("http://bulbapedia.bulbagarden.net/wiki/" + names.get(index)
-                                            + "_(Pok%C3%A9mon)#By_leveling" +
-                                            "_up").openStream()));
-                    index++;
-                }
-            }
-        }
-        inPokemonMoves.close();
-
         loopNum = 1;
         while((line = inExperienceGroups.readLine()) != null)
         {
@@ -777,12 +717,75 @@ public class PokemonUpdater
             }
             else if(line.contains("<a href=\"/wiki/Experience#") && line.contains("\" title=\"Experience\">"))
             {
+                String str = line.substring(line.indexOf("#") + 1, line.indexOf("\" title="));
                 for(int i = 0; i < loopNum; i++)
                 {
-                    experienceGroups.add(line.substring(line.indexOf("#") + 1, line.indexOf("\" title=")));
+                    experienceGroups.add(str);
                 }
             }
         }
+
+        inExperienceGroups.close();
+
+        int index = 1;
+        inPokemonMoves = new BufferedReader(
+                new InputStreamReader(
+                        new URL("http://bulbapedia.bulbagarden.net/wiki/" + names.get(0)
+                                + "_(Pok%C3%A9mon)#By_leveling_up").openStream()));
+        String individualLevel = "", individualMove, levelString = "", moveString = "";
+
+        System.out.println(0 + ": " + "Bulbasaur");
+        while(index <= names.size() && (line = inPokemonMoves.readLine()) != null)
+        {
+            if(line.contains("<td style=\"background:#FFFFFF; border:1px solid #D8D8D8;\"> <span style=\"display:none\">") ||
+               line.contains("<td style=\"background:#FFFFFF; text-align:center; border:1px solid #D8D8D8; background:#EDDFE0; color:#2B3134\">") &&
+                    individualLevel.equals(""))
+            {
+                String str = line.substring(line.indexOf("</span>") + 7);
+
+                if(str.equalsIgnoreCase("N/A"))
+                {
+                    str = -1 + "";
+                }
+                else if(str.equalsIgnoreCase("Start"))
+                {
+                    str = 0 + "";
+                }
+                individualLevel +=  str;
+
+
+            }
+            else if(line.contains("<td style=\"background:#FFFFFF; border:1px solid #D8D8D8;\">") && line.contains("<a href=\"/wiki/") && line.contains("_(move)"))
+            {
+                moveString += "Move." + line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_(move)")).toUpperCase() + ", ";
+                levelString += individualLevel + ", ";
+                individualLevel = "";
+                for(int i = 0; i < 10; i++)
+                {
+                    inPokemonMoves.readLine();
+                }
+            }
+            if(line.contains("<ul><li>A level of \"Start\" indicates a move that will be known by a"))
+            {
+                pokemonMovesMoves.add(moveString.substring(0, moveString.length() - 2).replace("-", "_"));
+                pokemonMovesIntegers.add(levelString.substring(0, levelString.length() - 2));
+                moveString = "";
+                levelString = "";
+
+                if(index < names.size())
+                {
+                    inPokemonMoves.close();
+                    System.out.println(index + ": " + names.get(index));
+                    inPokemonMoves = new BufferedReader(
+                            new InputStreamReader(
+                                    new URL("http://bulbapedia.bulbagarden.net/wiki/" + names.get(index)
+                                            + "_(Pok%C3%A9mon)#By_leveling" +
+                                            "_up").openStream()));
+                    index++;
+                }
+            }
+        }
+        inPokemonMoves.close();
 
         /*String ability = null, desc;
         while((line = inAbilities.readLine()) != null)
@@ -821,8 +824,8 @@ public class PokemonUpdater
             {
                 addon = ";";
             }
-            writer.print(names.get(i).toUpperCase() +
-                    "(" + "\"" + names.get(i) +
+            writer.print(names.get(i).toUpperCase().replace(".","") +
+                    "(" + "\"" + names.get(i).replace("_", " ") +
                     "\", \"" + dexNum.get(i) +
                     "\", (short)" + catchRates.get(i) +
                     ", " +
