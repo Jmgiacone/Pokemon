@@ -1,11 +1,14 @@
 package pokemon.core;
 
 import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
 
 public enum Species
 {
-    NOLAN("Nolan", "000", (short)1, new short[] {127,127,127,127,127,127}, (byte)0, new byte[] {1, 1, 1, 1, 1, 1},
-            GenderRatio.GENDERLESS, ExperienceGroup.FLUCTUATING, null, null, null, Type.DARK);
+    /*NOLAN("Nolan", "000", (short)1, new short[] {127,127,127,127,127,127}, (byte)0, new byte[] {1, 1, 1, 1, 1, 1},
+            GenderRatio.GENDERLESS, ExperienceGroup.FLUCTUATING, null, null, null, Type.DARK);*/
+    BULBASAUR("Bulbasaur", "001", (short)45, new short[] {45, 49, 49, 65, 65, 45}, (byte)64, new byte[] {0, 0, 0, 1, 0, 0}, GenderRatio.ONE_FEMALE_SEVEN_MALE, null, null, convertToMap(new int[] {0, 3, 7, 9, 13, 13, 15, 19, 21, 25, 27, 31, 33, 37}, new Move[] {Move.TACKLE, Move.GROWL, Move.LEECH_SEED, Move.VINE_WHIP, Move.POISONPOWDER, Move.SLEEP_POWDER, Move.TAKE_DOWN, Move.RAZOR_LEAF, Move.SWEET_SCENT, Move.GROWTH, Move.DOUBLE_EDGE, Move.WORRY_SEED, Move.SYNTHESIS, Move.SEED_BOMB}),Type.GRASS, Type.POISON);
 
     private enum GenderRatio
     {
@@ -160,8 +163,10 @@ public enum Species
             }
         }
     }
+
+    private final Map<Integer, Move> LEARNSET;
     private final ExperienceGroup EXP_GROUP;
-    private final Species[] EVOLUTION, PREVOLUTION;
+    private final Species[] EVOLUTION;
     private final GenderRatio GENDER_RATIO;
     private final short[] BASE_STATS;
     private final byte[] EV_YIELD;
@@ -171,7 +176,7 @@ public enum Species
     private boolean HAS_CALCULATED_GENDER;
 
     Species(final String name, final String dexNumber, final short catchRate, final short[] stats, byte expYield, byte[] evYield,
-            GenderRatio ratio, ExperienceGroup group, final Species[] evolvesTo, Species[] evolvesFrom, final Type... type)
+            GenderRatio ratio, ExperienceGroup group, final Species[] evolvesTo, Map<Integer, Move> learnset, final Type... type)
     {
         if(type.length > 2)
         {
@@ -183,6 +188,7 @@ public enum Species
             throw new IllegalArgumentException("You must input at least one type for " + name);
         }
 
+        LEARNSET = new TreeMap<>(learnset);
         HAS_CALCULATED_GENDER = false;
         GENDER_RATIO = ratio;
         EV_YIELD = new byte[] {evYield[0], evYield[1], evYield[2], evYield[3], evYield[4], evYield[5]};
@@ -193,7 +199,7 @@ public enum Species
         NAME = name;
         TYPE = type;
 
-        if(evolvesFrom != null)
+        /*if(evolvesFrom != null)
         {
             switch(evolvesFrom.length)
             {
@@ -214,7 +220,7 @@ public enum Species
         else
         {
             PREVOLUTION = null;
-        }
+        }*/
 
         if(evolvesTo != null)
         {
@@ -242,10 +248,10 @@ public enum Species
         EXP_GROUP = group;
     }
 
-    public boolean hasPreEvolutions()
+    /*public boolean hasPreEvolutions()
     {
         return PREVOLUTION != null;
-    }
+    }*/
 
     public boolean hasEvolutions()
     {
@@ -257,14 +263,35 @@ public enum Species
         return EXP_GROUP.getExpForLevel(level);
     }
 
-    public boolean hasPreEvolution(Species s)
+    /*public boolean hasPreEvolution(Species s)
     {
         return contains(PREVOLUTION, s);
-    }
+    }*/
 
     public boolean hasEvolution(Species s)
     {
         return contains(EVOLUTION, s);
+    }
+
+    private static Map<Integer, Move> convertToMap(int[] a, Move[] b)
+    {
+        if(a.length != b.length)
+        {
+            throw new IllegalArgumentException("a and b must be the same length");
+        }
+
+        Map<Integer, Move> m = new TreeMap<>();
+
+        for(int i = 0; i < a.length; i++)
+        {
+            //The -1 denotes a Move that isn't applicable for BW2. Thusly, it's ignored
+            if(a[i] != -1)
+            {
+                m.put(a[i], b[i]);
+            }
+        }
+
+        return m;
     }
 
     private boolean contains(Species[] spec, Species s)
