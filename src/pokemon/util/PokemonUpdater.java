@@ -27,7 +27,8 @@ public class PokemonUpdater
             inGenderRatio = new BufferedReader(new InputStreamReader(genderRationUrl.openStream())),
             inAbilities = new BufferedReader(new InputStreamReader(abilityUrl.openStream())),
             inPokemonAbilities = new BufferedReader(new InputStreamReader(pokemonAbilityUrl.openStream())),
-            inMoves = new BufferedReader(new InputStreamReader(movesUrl.openStream()));
+            inMoves = new BufferedReader(new InputStreamReader(movesUrl.openStream())),
+            inPokemonMoves;
 
         Scanner reader = new Scanner(new File("Catch rate html.txt"));
 
@@ -40,7 +41,9 @@ public class PokemonUpdater
                 xpYields = new ArrayList<>(),
                 genderRatios = new ArrayList<>(),
                 pokemonAbilities = new ArrayList<>(),
-                moves = new ArrayList<>();
+                moves = new ArrayList<>(),
+                pokemonMovesMoves = new ArrayList<>(),
+                pokemonMovesIntegers = new ArrayList<>();
         Map<String, String> abilities = new TreeMap<>();
 
         for(int i = 0; i < 680; i++)
@@ -460,11 +463,11 @@ public class PokemonUpdater
             }
 
             if(line.contains("<a href=\"/wiki/") && line.contains("_(Pok%C3%A9mon)\" title=\"") &&
-                    line.contains("(Pokémon)\">"))
+                    line.contains("(Pokémon)\">") && !line.contains("This is a list of"))
             {
                 try
                 {
-                    name = line.substring(line.indexOf("(Pokémon)\">") + 11, line.indexOf("</a>")).trim();
+                    name = line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_(Pok%C3%A9mon)")).trim();
 
                     for(int i = 0; i < loopNum; i++)
                     {
@@ -636,8 +639,66 @@ public class PokemonUpdater
                 }
             }
         }
+        int index = 1;
+        inPokemonMoves = new BufferedReader(
+                new InputStreamReader(
+                        new URL("http://bulbapedia.bulbagarden.net/wiki/" + names.get(0)
+                                + "_(Pok%C3%A9mon)#By_leveling_up").openStream()));
+        String individualLevel = "", individualMove, levelString = "", moveString = "";
 
-        String ability = null, desc;
+        System.out.println(0 + ": " + "Bulbasaur");
+        while(index <= names.size() && (line = inPokemonMoves.readLine()) != null)
+        {
+            //System.out.println(line);
+            if(line.contains("<td style=\"background:#FFFFFF; border:1px solid #D8D8D8;\"> <span style=\"display:none\">") ||
+               line.contains("<td style=\"background:#FFFFFF; text-align:center; border:1px solid #D8D8D8; background:#EDDFE0; color:#2B3134\">") &&
+                    individualLevel.equals(""))
+            {
+                String str = line.substring(line.indexOf("</span>") + 7);
+
+                if(str.equalsIgnoreCase("N/A"))
+                {
+                    str = -1 + "";
+                }
+                else if(str.equalsIgnoreCase("Start"))
+                {
+                    str = 0 + "";
+                }
+                individualLevel +=  str;
+
+
+            }
+            else if(line.contains("<td style=\"background:#FFFFFF; border:1px solid #D8D8D8;\">") && line.contains("<a href=\"/wiki/") && line.contains("_(move)"))
+            {
+                moveString += "Move." + line.substring(line.indexOf("/wiki/") + 6, line.indexOf("_(move)")).toUpperCase() + ", ";
+                levelString += individualLevel + ", ";
+                individualLevel = "";
+                for(int i = 0; i < 10; i++)
+                {
+                    inPokemonMoves.readLine();
+                }
+            }
+            if(line.contains("<ul><li>A level of \"Start\" indicates a move that will be known by a"))
+            {
+                pokemonMovesMoves.add(moveString.substring(0, moveString.length() - 2));
+                pokemonMovesIntegers.add(levelString.substring(0, levelString.length() - 2));
+                moveString = "";
+                levelString = "";
+
+                if(index < names.size())
+                {
+                    inPokemonMoves.close();
+                    System.out.println(index + ": " + names.get(index));
+                    inPokemonMoves = new BufferedReader(
+                            new InputStreamReader(
+                                    new URL("http://bulbapedia.bulbagarden.net/wiki/" + names.get(index)
+                                            + "_(Pok%C3%A9mon)#By_leveling_up").openStream()));
+                    index++;
+                }
+            }
+        }
+        inPokemonMoves.close();
+        /*String ability = null, desc;
         while((line = inAbilities.readLine()) != null)
         {
             if(line.contains("<td align=\"center\"> <a href=\"/wiki/"))
@@ -650,7 +711,7 @@ public class PokemonUpdater
                 String[] parts = ability.split(" ");
                 abilities.put(parts.length > 1 ? parts[0] + "_" + parts[1] : ability, desc);
             }
-        }
+        }*/
 
         String addon = ",\n";
         String[] parts;
@@ -683,12 +744,13 @@ public class PokemonUpdater
                     xpYields.get(i) + ", " +
                     "new byte[] {" + evYields.get(i) + "}, GenderRatio." +
                     genderRatios.get(i) + ", " +
+                    "convertToMap(new int[] {" + pokemonMovesIntegers.get(i) + "}, new Move[] {" + pokemonMovesMoves.get(i) + "}), " +
                     type.get(i) +
                     ")" + addon);
             writer.flush();
         }
 
-        writer = new PrintWriter(new File("Ability.txt"));
+        /*writer = new PrintWriter(new File("Ability.txt"));
         int counter = 0;
         String ab = "";
         addon = ",\n";
@@ -706,7 +768,7 @@ public class PokemonUpdater
             writer.print(ab + "(" + "\"" + abilities.get(ab) + "\")" + addon);
             writer.flush();
             counter++;
-        }
+        }*/
 
         writer = new PrintWriter("Moves.txt");
 
