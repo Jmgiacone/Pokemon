@@ -12,13 +12,8 @@ import pokemon.core.Species;
  */
 public class WildPokemonGenerator {
     //TODO - make enums for each route and what pokemon can appear where along with the level range
-    public static Pokemon generatePokemon() {
-        int rand = (int) (Math.random() * Species.values().length);
-        for(final Species s : Species.values()) {
-            if(Integer.parseInt(s.getDexNumber()) == rand) {
-                return new Pokemon(s);
-            }
-        }
-        return null;
+    public static Pokemon generatePokemon()
+    {
+        return new Pokemon(Species.values()[(int) (Math.random() * Species.values().length)]);
     }
 }
