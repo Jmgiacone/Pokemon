@@ -48,6 +48,7 @@ public class PokemonUpdater
                 pokemonMovesIntegers = new ArrayList<>(),
                 experienceGroups = new ArrayList<>();
         Map<String, String> abilities = new TreeMap<>();
+        PrintWriter writer;
 
         for(int i = 0; i < 680; i++)
         {
@@ -484,6 +485,34 @@ public class PokemonUpdater
             }
         }
 
+        writer = new PrintWriter("Generations.txt");
+        String gen = "Generation1.", add = ", \n";
+        for(String str : names)
+        {
+            switch(str)
+            {
+                case "Chikorita":
+                    gen = "Generation2.";
+                    break;
+                case "Treecko":
+                    gen = "Generation3.";
+                    break;
+                case "Turtwig":
+                    gen = "Generation4.";
+                    break;
+                case "Victini":
+                    gen = "Generation5.";
+                    break;
+                case "Genesect":
+                    add = ";";
+            }
+
+            writer.print(str.toUpperCase().replace(".", "").replace("-", "_") + "(" + gen + str.toUpperCase().replace(".", "").replace("-", "_") + ")" + add);
+            writer.flush();
+        }
+
+        JOptionPane.showMessageDialog(null, "Generation writing complete!");
+        System.exit(0);
         loopNum = 1;
         while((line = inGenderRatio.readLine()) != null)
         {
@@ -816,7 +845,7 @@ public class PokemonUpdater
             }
         }
 
-        PrintWriter writer  = new PrintWriter(new File("Pokemon.txt"));
+        writer  = new PrintWriter(new File("Pokemon.txt"));
         for(int i = 0; i < names.size(); i++)
         {
             //parts = names.get(i).split("\\.' ");
@@ -824,7 +853,7 @@ public class PokemonUpdater
             {
                 addon = ";";
             }
-            writer.print(names.get(i).toUpperCase().replace(".","") +
+            writer.print(names.get(i).toUpperCase().replace(".", "") +
                     "(" + "\"" + names.get(i).replace("_", " ") +
                     "\", \"" + dexNum.get(i) +
                     "\", (short)" + catchRates.get(i) +
