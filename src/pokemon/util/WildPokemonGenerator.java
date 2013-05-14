@@ -1,4 +1,4 @@
-package pokemon.utility;
+package pokemon.util;
 
 import pokemon.core.Pokemon;
 import pokemon.core.Species;

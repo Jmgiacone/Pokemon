@@ -1,6 +1,6 @@
 package pokemon.tests;
 
-import org.junit.*;
+import org.junit.Test;
 import pokemon.core.Gender;
 import pokemon.core.Pokemon;
 import pokemon.core.Species;
