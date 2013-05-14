@@ -33,6 +33,7 @@ public class Powerhouse {
         }
         if(player.isPartyEmpty()) {
             print("Failed to add pokemon to your party, you must choose one of the three starter pokemon.", true);
+            System.exit(0);
         } else {
             print("Player contents: \n" + player.toString(), true);
         }
@@ -44,7 +45,7 @@ public class Powerhouse {
             final Pokemon wild = WildPokemonGenerator.generatePokemon();
             System.out.println("Wild pokemon information: " + wild);
             print("You encountered a " + wild.getName() + "!", true);
-            //break;
+            break;
         }
     }
 
