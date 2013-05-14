@@ -13,16 +13,22 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class Player {
+    private boolean inBattle;
     private int money;
     private String name;
     private Bag bag;
     private Pokemon[] party;
 
     public Player(final String name) {
+        inBattle = false;
         this.money = 0;
         this.name = name;
         this.bag = new Bag();
         this.party = new Pokemon[6];
+    }
+
+    public boolean isInBattle() {
+        return inBattle;
     }
 
     public int getMoney() {
@@ -39,6 +45,10 @@ public class Player {
 
     public Pokemon[] getParty() {
         return this.party;
+    }
+
+    public void setBattleState(final boolean inBattle) {
+        this.inBattle = inBattle;
     }
 
     public boolean isPartyEmpty() {
