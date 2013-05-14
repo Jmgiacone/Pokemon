@@ -3,7 +3,7 @@ package pokemon.engine;
 import pokemon.core.Pokemon;
 import pokemon.core.Species;
 import pokemon.interactive.Player;
-import pokemon.utility.WildPokemonGenerator;
+import pokemon.util.WildPokemonGenerator;
 
 import java.util.Scanner;
 
@@ -37,13 +37,14 @@ public class Powerhouse {
             print("Player contents: \n" + player.toString(), true);
         }
 
-        print("Would you like to battle?: ", false); battle = in.nextLine().equalsIgnoreCase("yes") ? true : false;
+        print("Would you like to battle?: ", false);
+        battle = in.nextLine().equalsIgnoreCase("yes");
         player.setBattleState(battle);
         while(player.isInBattle()) {
             final Pokemon wild = WildPokemonGenerator.generatePokemon();
             System.out.println("Wild pokemon information: " + wild);
             print("You encountered a " + wild.getName() + "!", true);
-            break;
+            //break;
         }
     }
 
