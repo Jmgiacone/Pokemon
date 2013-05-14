@@ -65,6 +65,9 @@ public class Pokemon
         //EVS all start at 0
         evs = new byte[] {0, 0, 0, 0, 0, 0};
 
+        //All Pokemon start at level 5
+        level = 100;
+
         currentStats = new short[]{
                 calculateStat(Stat.HP),
                 calculateStat(Stat.ATTACK),
@@ -76,12 +79,16 @@ public class Pokemon
         //Copy the contents of currentStats -> inBattleStats
         System.arraycopy(currentStats, 0, inBattleStats, 0, currentStats.length);
 
-        //All Pokemon start at level 1
-        level = 5;
+        if(level < 100)
+        {
+            totalExpForNextLevel = species.calculateExp((byte)(level + 1));
+        }
+        else
+        {
+            totalExpForNextLevel = species.calculateExp((byte)(100));
+        }
 
-        totalExpForNextLevel = species.calculateExp((byte)(level + 1));
-
-        totalExp = species.calculateExp((byte)(level + 1));
+        totalExp = species.calculateExp(level);
 
         NATURE = Nature.values()[(int)Math.random() * Nature.values().length];
     }
@@ -238,6 +245,6 @@ public class Pokemon
     @Override
     public String toString()
     {
-        return getName() + " / " + nickname + ": HP(" + getInBattleHp() + " / " + getCurrentStat(Stat.HP) + ")";
+        return "\"" + nickname + "\"/" + getName() + ": Level "+ level + ", HP(" + getInBattleHp() + "/" + getCurrentStat(Stat.HP) + ")";
     }
 }
