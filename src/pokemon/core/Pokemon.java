@@ -171,9 +171,9 @@ public class Pokemon
      * @return The in battle stat of the Pokemon.
      * @throws ArrayIndexOutOfBoundsException
      */
-    public short getInBattleStat(final int stat) throws ArrayIndexOutOfBoundsException
+    public short getInBattleStat(final Stat stat) throws ArrayIndexOutOfBoundsException
     {
-        return inBattleStats[stat];
+        return inBattleStats[stat.byteOrdinal()];
     }
 
     /**
@@ -182,9 +182,9 @@ public class Pokemon
      * @return The current stat of the Pokemon.
      * @throws ArrayIndexOutOfBoundsException
      */
-    public short getCurrentStat(final int stat) throws ArrayIndexOutOfBoundsException
+    public short getCurrentStat(final Stat stat) throws ArrayIndexOutOfBoundsException
     {
-        return currentStats[stat];
+        return currentStats[stat.byteOrdinal()];
     }
 
     /**
@@ -233,5 +233,11 @@ public class Pokemon
         {
             status[i] = false;
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return getName() + " / " + nickname + ": HP(" + getInBattleHp() + " / " + getCurrentStat(Stat.HP) + ")";
     }
 }
