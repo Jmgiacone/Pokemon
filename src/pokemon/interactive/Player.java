@@ -15,14 +15,14 @@ import java.util.Map;
 public class Player {
     private boolean inBattle;
     private int money;
-    private String name;
+    private final String NAME;
     private Bag bag;
     private Pokemon[] party;
 
     public Player(final String name) {
         inBattle = false;
         this.money = 0;
-        this.name = name;
+        NAME = name;
         this.bag = new Bag();
         this.party = new Pokemon[6];
     }
@@ -36,7 +36,7 @@ public class Player {
     }
 
     public String getName() {
-        return this.name;
+        return NAME;
     }
 
     public Bag getBag() {
@@ -65,10 +65,12 @@ public class Player {
      * @param pokemon <code>Pokemon</code> to add to the party.
      * @return <code>true</code> if the pokemon was added, <code>false</code> otherwise.
      */
-    public boolean addToParty(final Pokemon pokemon) {
-        for(Pokemon p : getParty()) {
-            if(p == null) {
-                p = pokemon;
+    public boolean addToParty(final Pokemon pokemon)
+    {
+        for(int i = 0; i < party.length; i++)
+        {
+            if(party[i] == null) {
+                party[i] = pokemon;
                 return true;
             }
         }
@@ -85,9 +87,10 @@ public class Player {
         return true;
     }
 
+    @Override
     public String toString() {
         return "Name: " + getName() +
-               "Money: " + getMoney() +
+               "\nMoney: " + getMoney() +
                "\nBag contents " + getBag().getMap() +
                "\nParty contents " + Arrays.toString(getParty());
     }
