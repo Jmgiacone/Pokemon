@@ -1,5 +1,6 @@
 package pokemon.engine;
 
+import pokemon.core.Move;
 import pokemon.core.Pokemon;
 import pokemon.core.Species;
 import pokemon.interactive.Player;
@@ -46,7 +47,23 @@ public class Powerhouse {
             final Pokemon wild = WildPokemonGenerator.generatePokemon();
             System.out.println("Wild pokemon information: " + wild);
             print("You encountered a " + wild.getName() + "!", true);
-            print("Move set: " + Arrays.toString(player.getParty()[0].getMoveSet()),true);
+            print("Move set: " + Arrays.toString(player.getParty()[0].getMoveSet()) + ", type the name of the move you want to use.", true);
+            final String moveParse = in.nextLine();
+            Move moveSelected = null;
+            for(final Move m : player.getParty()[0].getMoveSet()) {
+                try {
+                    if(m == Move.valueOf(moveParse)) {
+                        moveSelected = m;
+                    }
+                } catch(IllegalArgumentException e) {
+                    //lol trolled
+                }
+            }
+            if(moveSelected == null) {
+                print("Move not recognized.", true);
+                continue;
+                //TODO - add a goto label to input another move
+            }
             break;
         }
     }
