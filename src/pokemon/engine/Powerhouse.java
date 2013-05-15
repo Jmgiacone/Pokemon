@@ -43,8 +43,8 @@ public class Powerhouse {
         print("Would you like to battle?: ", false);
         battle = in.nextLine().equalsIgnoreCase("yes");
         player.setBattleState(battle);
+        final Pokemon wild = WildPokemonGenerator.generatePokemon();
         while(player.isInBattle()) {
-            final Pokemon wild = WildPokemonGenerator.generatePokemon();
             System.out.println("Wild pokemon information: " + wild);
             print("You encountered a " + wild.getName() + "!", true);
             print("Move set: " + Arrays.toString(player.getParty()[0].getMoveSet()) + ", type the name of the move you want to use.", true);
@@ -64,6 +64,7 @@ public class Powerhouse {
                 continue;
                 //TODO - add a goto label to input another move
             }
+            wild.applyMove(moveSelected);
             break;
         }
     }
