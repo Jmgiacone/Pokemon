@@ -153,6 +153,10 @@ public class Pokemon
         }
     }
 
+    public Move[] getMoveSet()
+    {
+        return moveSet;
+    }
     /**
      * Gets the Pokemon's Gender.
      * @return GENDER The Pokemon's Gender.
