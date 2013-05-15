@@ -125,6 +125,10 @@ public class Pokemon
         totalExp = p.totalExp;
     }
 
+    public Move[] getMoveSet() {
+        return this.moveSet;
+    }
+
     /**
      * Gets the Pokemon's Gender.
      * @return GENDER The Pokemon's Gender.
