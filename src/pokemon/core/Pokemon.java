@@ -66,7 +66,7 @@ public class Pokemon
         evs = new byte[] {0, 0, 0, 0, 0, 0};
 
         //All Pokemon start at level 5
-        level = 100;
+        level = 5;
 
         currentStats = new short[]{
                 calculateStat(Stat.HP),
@@ -91,6 +91,8 @@ public class Pokemon
         totalExp = species.calculateExp(level);
 
         NATURE = Nature.values()[(int)Math.random() * Nature.values().length];
+
+        initializeMoves();
     }
 
     /**
@@ -125,6 +127,32 @@ public class Pokemon
         totalExp = p.totalExp;
     }
 
+    public boolean canLearnNewMove()
+    {
+        return species.getLearnset().containsKey(level);
+    }
+    private void initializeMoves()
+    {
+        for(int i : species.getLearnset().keySet())
+        {
+            if(i <= level)
+            {
+                for(int j = 0; j < moveSet.length; j++)
+                {
+                    if(moveSet[j] == null)
+                    {
+                        moveSet[j] = species.getLearnset().get(i);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
     /**
      * Gets the Pokemon's Gender.
      * @return GENDER The Pokemon's Gender.
@@ -143,6 +171,10 @@ public class Pokemon
         return species.getName();
     }
 
+    public String getNickname()
+    {
+        return nickname;
+    }
     /**
      * Gets the Pokemon's Type.
      * @return The Pokemon's Type.
@@ -168,8 +200,8 @@ public class Pokemon
      */
     private short calculateStat(final Stat stat)
     {
-        return (short)(stat == Stat.HP ? (((IVS[Stat.HP.byteOrdinal()] + (2 * species.getBaseStat(Stat.HP.byteOrdinal())) + (evs[Stat.HP.byteOrdinal()] / 4) + 100) * level) / 100) + 10 :
-                (((IVS[stat.byteOrdinal()] + (2 * species.getBaseStat(stat.byteOrdinal())) + (evs[stat.byteOrdinal()] / 4)) * level) / 100) + 5);
+        return (short)(stat == Stat.HP ? (((IVS[(byte)Stat.HP.ordinal()] + (2 * species.getBaseStat((byte)Stat.HP.ordinal())) + (evs[(byte)Stat.HP.ordinal()] / 4) + 100) * level) / 100) + 10 :
+                (((IVS[(byte)stat.ordinal()] + (2 * species.getBaseStat((byte)stat.ordinal())) + (evs[(byte)stat.ordinal()] / 4)) * level) / 100) + 5);
     }
 
     /**
@@ -180,7 +212,7 @@ public class Pokemon
      */
     public short getInBattleStat(final Stat stat) throws ArrayIndexOutOfBoundsException
     {
-        return inBattleStats[stat.byteOrdinal()];
+        return inBattleStats[(byte)stat.ordinal()];
     }
 
     /**
@@ -191,7 +223,7 @@ public class Pokemon
      */
     public short getCurrentStat(final Stat stat) throws ArrayIndexOutOfBoundsException
     {
-        return currentStats[stat.byteOrdinal()];
+        return currentStats[(byte)stat.ordinal()];
     }
 
     /**
@@ -212,7 +244,7 @@ public class Pokemon
      */
     public int getInBattleHp()
     {
-        return inBattleStats[Stat.HP.byteOrdinal()];
+        return inBattleStats[(byte)Stat.HP.ordinal()];
     }
 
     /**
@@ -234,9 +266,9 @@ public class Pokemon
 
         resetStats();
         //Un-neglect the HP
-        inBattleStats[Stat.HP.byteOrdinal()] = currentStats[Stat.HP.byteOrdinal()];
+        inBattleStats[(byte)Stat.HP.ordinal()] = currentStats[(byte)Stat.HP.ordinal()];
 
-        for(int i = Status.POISON.byteOrdinal(); i <= Status.SEED.byteOrdinal(); i++)
+        for(byte i = (byte)Status.POISON.ordinal(); i <= (byte)Status.SEED.ordinal(); i++)
         {
             status[i] = false;
         }
