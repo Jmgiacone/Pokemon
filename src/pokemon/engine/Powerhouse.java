@@ -5,6 +5,7 @@ import pokemon.core.Species;
 import pokemon.interactive.Player;
 import pokemon.util.WildPokemonGenerator;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -45,6 +46,7 @@ public class Powerhouse {
             final Pokemon wild = WildPokemonGenerator.generatePokemon();
             System.out.println("Wild pokemon information: " + wild);
             print("You encountered a " + wild.getName() + "!", true);
+            print("Move set: " + Arrays.toString(player.getParty()[0].getMoveSet()),true);
             break;
         }
     }
