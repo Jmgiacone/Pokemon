@@ -2019,6 +2019,10 @@ public enum Species
         return PREVOLUTION != null;
     }*/
 
+    public Map<Integer, Move> getLearnset()
+    {
+        return LEARNSET;
+    }
     public boolean hasEvolutions()
     {
         return EVOLUTION != null;
