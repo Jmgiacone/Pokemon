@@ -2104,14 +2104,9 @@ public enum Species
 
     public Gender getGender()
     {
-        if(!HAS_CALCULATED_GENDER)
-        {
-            HAS_CALCULATED_GENDER = true;
-            return GENDER_RATIO.getGender();
-        }
-
-        throw new UnsupportedOperationException("Gender can only be calculated once.");
+        return GENDER_RATIO.getGender();
     }
+
     /**
      * Returns Name of the Pokemon
      *

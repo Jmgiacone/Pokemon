@@ -1,7 +1,7 @@
 package pokemon.tests;
 
 
-import org.junit.*;
+import org.junit.Test;
 import pokemon.core.Type;
 
 import static org.junit.Assert.*;
