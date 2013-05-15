@@ -278,6 +278,14 @@ public class Pokemon
         }
     }
 
+    public void applyMove(final Move m) {
+        for(final Stat s : Stat.values()) {
+            //TODO - loop through move effects and apply stat buffs/debuffs
+        }
+        //TODO - calculate effectiveness
+        this.inBattleStats[0] -= m.getPower(); //no idea if this is correct, jordan do this pls
+    }
+
     @Override
     public String toString()
     {
