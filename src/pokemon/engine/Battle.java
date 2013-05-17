@@ -1,8 +1,6 @@
 package pokemon.engine;
 
-import pokemon.core.Move;
-import pokemon.core.Pokemon;
-import pokemon.core.Type;
+import pokemon.core.*;
 import pokemon.interactive.Player;
 
 public class Battle
@@ -18,13 +16,30 @@ public class Battle
         battling = true;
     }
 
-    private short calculateDamage(Pokemon attacking, Move used, Pokemon defending)
+    public/*ivate*/ short calculateDamage(Pokemon attacking, Move used, Pokemon defending)
     {
         //http://bulbapedia.bulbagarden.net/wiki/Damage_modification#Damage_formula
-        return 0;
+        short attack, defense;
+        switch(used.getMoveType())
+        {
+            case PHYSICAL:
+                attack = attacking.getInBattleStat(Stat.ATTACK);
+                defense = defending.getInBattleStat(Stat.DEFENSE);
+                break;
+            case SPECIAL:
+                attack = attacking.getInBattleStat(Stat.SP_ATTACK);
+                defense = defending.getInBattleStat(Stat.SP_DEFENSE);
+                break;
+            case STATUS:
+                return 0;
+            default:
+                throw new IllegalStateException("The MoveType " + used.getMoveType() + " is illegal");
+        }
+
+        return (short)(((2 * attacking.getLevel() + 10) / 250) * (attack / defense) * used.getPower() + 2 * modifiers(attacking, used, defending));
     }
 
-    private short modifiers(Pokemon attacking, Move used, Pokemon defending)
+    public/*rivate*/ short modifiers(Pokemon attacking, Move used, Pokemon defending)
     {
         //http://bulbapedia.bulbagarden.net/wiki/Damage_modification#Damage_formula
         float stab = 1, typeEffectiveness = 1;
@@ -54,7 +69,7 @@ public class Battle
             }
         }
 
-        return (short)(stab * typeEffectiveness * crit * ((Math.random() * .15) +.85));
+        return (short)(stab * typeEffectiveness * crit * ((Math.random() * .15) + .85));
     }
 
     public boolean isRunning()
