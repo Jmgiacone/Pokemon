@@ -2028,9 +2028,9 @@ public enum Species
         return EVOLUTION != null;
     }
 
-    public int calculateExp(byte level)
+    public int calculateExp(int level)
     {
-        return EXP_GROUP.getExpForLevel(level);
+        return EXP_GROUP.getExpForLevel((byte)level);
     }
 
     /*public boolean hasPreEvolution(Species s)
