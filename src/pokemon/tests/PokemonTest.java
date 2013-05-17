@@ -13,7 +13,7 @@ public class PokemonTest
     @Test
     public void testGetGender() throws Exception
     {
-        Pokemon p = new Pokemon(Species.BULBASAUR);
+        Pokemon p = new Pokemon(Species.CHARMANDER);
         Gender g = p.getGender();
         assertEquals(g, p.getGender());
         assertEquals(p.getGender(), g);
