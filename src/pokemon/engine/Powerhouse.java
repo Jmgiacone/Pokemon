@@ -44,29 +44,32 @@ public class Powerhouse {
         isBattling = in.nextLine().equalsIgnoreCase("yes");
         player.setBattleState(isBattling);
         final Pokemon wild = WildPokemonGenerator.generatePokemon();
-        while(player.isInBattle()) {
-            System.out.println("Wild pokemon information: " + wild);
-            print("You encountered a " + wild.getName() + "!", true);
-            print("Move set: " + Arrays.toString(player.getParty()[0].getMoveSet()) + ", type the name of the move you want to use.", true);
-            final Battle battle = new Battle(player, wild);
-            final String moveParse = in.nextLine();
+        System.out.println("Wild pokemon information: " + wild);
+        print("You encountered a " + wild.getName() + "!", true);
+        print("Move set: " + Arrays.toString(player.getParty()[0].getMoveSet()) + ", type the name of the move you want to use.", true);
+        final Battle battle = new Battle(player, wild);
+        while(battle.isRunning()) {
             Move moveSelected = null;
-            for(final Move m : player.getParty()[0].getMoveSet()) {
-                try {
-                    if(m == Move.valueOf(moveParse)) {
-                        moveSelected = m;
+            while(moveSelected == null) {
+                final String moveParse = in.nextLine();
+                for(final Move m : player.getParty()[0].getMoveSet()) {
+                    try {
+                        if(m == Move.valueOf(moveParse.toUpperCase())) {
+                            moveSelected = m;
+                        }
+                    } catch(IllegalArgumentException e) {
+                        //lol trolled
                     }
-                } catch(IllegalArgumentException e) {
-                    //lol trolled
                 }
+                if(moveSelected == null) {
+                    print("Move not recognized. Enter a valid move", true);
+                    continue;
+                }
+                battle.useMove(moveSelected, true);
+                print(player.getParty()[0].getName() + " used " + moveSelected.getName() + "!", true);
+                break;
             }
-            if(moveSelected == null) {
-                print("Move not recognized.", true);
-                continue;
-                //TODO - add a goto label to input another move
-            }
-            wild.applyMove(moveSelected);
-            break;
+            print(wild.toString(), true);
         }
     }
 
