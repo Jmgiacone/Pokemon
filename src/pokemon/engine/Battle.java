@@ -16,6 +16,10 @@ public class Battle
         battling = true;
     }
 
+    public void useMove(final Move m, final boolean player) {
+        calculateDamage(player ? p.getParty()[0] : wild, m, player ? wild : p.getParty()[0]);
+    }
+
     public/*ivate*/ short calculateDamage(Pokemon attacking, Move used, Pokemon defending)
     {
         //http://bulbapedia.bulbagarden.net/wiki/Damage_modification#Damage_formula
