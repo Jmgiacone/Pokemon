@@ -623,6 +623,11 @@ public enum Move
         STAT_LOWERED = stat;
     }*/
 
+    public MoveType getMoveType()
+    {
+        return MOVE_TYPE;
+    }
+
     public int getPower()
     {
         return POWER;
