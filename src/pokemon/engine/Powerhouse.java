@@ -21,7 +21,7 @@ public class Powerhouse {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         final String[] starters = new String[] {"Charmander", "Bulbasaur", "Squirtle"};
-        boolean battle = false;
+        boolean isBattling = false;
         print(Powerhouse.class.getSimpleName(), true);
         print("Please enter your players name: ", false); Player player = new Player(in.nextLine());
         print("Please type the name of the start pokemon you would like (Charmander, Bulbasaur, Squirtle): ", false);
@@ -41,13 +41,14 @@ public class Powerhouse {
         }
 
         print("Would you like to battle?: ", false);
-        battle = in.nextLine().equalsIgnoreCase("yes");
-        player.setBattleState(battle);
+        isBattling = in.nextLine().equalsIgnoreCase("yes");
+        player.setBattleState(isBattling);
         final Pokemon wild = WildPokemonGenerator.generatePokemon();
         while(player.isInBattle()) {
             System.out.println("Wild pokemon information: " + wild);
             print("You encountered a " + wild.getName() + "!", true);
             print("Move set: " + Arrays.toString(player.getParty()[0].getMoveSet()) + ", type the name of the move you want to use.", true);
+            final Battle battle = new Battle(player, wild);
             final String moveParse = in.nextLine();
             Move moveSelected = null;
             for(final Move m : player.getParty()[0].getMoveSet()) {
