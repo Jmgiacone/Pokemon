@@ -133,16 +133,15 @@ public class Pokemon
     }
     private void initializeMoves()
     {
-        for(int i : species.getLearnset().keySet())
+        for(Move m : species.getLearnset().keySet())
         {
-            if(i <= level)
+            if(species.getLearnset().get(m) <= level)
             {
                 for(int j = 0; j < moveSet.length; j++)
                 {
                     if(moveSet[j] == null)
                     {
-                        moveSet[j] = species.getLearnset().get(i);
-                        break;
+                        moveSet[j] = m;
                     }
                 }
             }
