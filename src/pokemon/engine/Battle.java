@@ -23,6 +23,7 @@ public class Battle
     public/*ivate*/ short calculateDamage(Pokemon attacking, Move used, Pokemon defending)
     {
         //http://bulbapedia.bulbagarden.net/wiki/Damage_modification#Damage_formula
+        //http://www.smogon.com/bw/articles/bw_complete_damage_formula
         short attack, defense;
         switch(used.getMoveType())
         {
@@ -40,7 +41,8 @@ public class Battle
                 throw new IllegalStateException("The MoveType " + used.getMoveType() + " is illegal");
         }
 
-        return (short)(((2 * attacking.getLevel() + 10) / 250) * (attack / defense) * used.getPower() + 2 * modifiers(attacking, used, defending));
+        return (short)((((2 * attacking.getLevel() + 10) / 250.0) *
+                (attack / (double)defense) * used.getPower() + 2) * modifiers(attacking, used, defending));
     }
 
     public/*rivate*/ short modifiers(Pokemon attacking, Move used, Pokemon defending)
@@ -73,7 +75,7 @@ public class Battle
             }
         }
 
-        return (short)(stab * typeEffectiveness * crit * ((Math.random() * .15) + .85));
+        return (short)(stab * typeEffectiveness * crit * ((byte)((Math.random() * 16) + 85) / 100.0));
     }
 
     public boolean isRunning()
