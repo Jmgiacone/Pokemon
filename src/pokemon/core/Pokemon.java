@@ -188,6 +188,10 @@ public class Pokemon
         return species.getType();
     }
 
+    public void setLevel(byte level)
+    {
+        this.level = level;
+    }
     /**
      * Gets the level of the Pokemon.
      * @return level The level of the Pokemon.
