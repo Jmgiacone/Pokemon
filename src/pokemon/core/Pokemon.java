@@ -34,14 +34,19 @@ public class Pokemon
      */
     public Pokemon(String nickname, Species s)
     {
-        this(s);
+        this(s, 5);
         this.nickname = nickname;
+    }
+
+    public Pokemon(Species s)
+    {
+        this(s, 5);
     }
     /**
      * Creates a brand new Pokemon based on a given species. This Pokemon will start at level 5. If you want to evolve a Pokemon, use the copy constructor.
      * @param species The Pokemon Species that this Pokemon will be based off of.
      */
-    public Pokemon(Species species)
+    public Pokemon(Species species, int level)
     {
         //Set the Species of the Pokemon (ie. Charizard, Squirtle, etc...)
         this.species = species;
@@ -65,8 +70,7 @@ public class Pokemon
         //EVS all start at 0
         evs = new byte[] {0, 0, 0, 0, 0, 0};
 
-        //All Pokemon start at level 5
-        level = 5;
+        this.level = (byte)level;
 
         currentStats = new short[]{
                 calculateStat(Stat.HP),
@@ -131,6 +135,7 @@ public class Pokemon
     {
         return species.getLearnset().containsKey(level);
     }
+
     private void initializeMoves()
     {
         for(Move m : species.getLearnset().keySet())
@@ -142,12 +147,9 @@ public class Pokemon
                     if(moveSet[j] == null)
                     {
                         moveSet[j] = m;
+                        break;
                     }
                 }
-            }
-            else
-            {
-                break;
             }
         }
     }
@@ -187,9 +189,11 @@ public class Pokemon
         return species.getType();
     }
 
-    public void setLevel(byte level)
+    public void setLevel(int level)
     {
-        this.level = level;
+        this.level = (byte)level;
+        recalculateStats();
+        totalExpForNextLevel = level < 100 ? species.calculateExp(level + 1) : species.calculateExp(level + 1);
     }
     /**
      * Gets the level of the Pokemon.
@@ -200,6 +204,14 @@ public class Pokemon
         return level;
     }
 
+    private void recalculateStats()
+    {
+        for(int i = 0; i < currentStats.length; i++)
+        {
+            currentStats[i] = calculateStat(Stat.values()[i]);
+            inBattleStats[i] = currentStats[i];
+        }
+    }
     /**
      * Calculates any stat.
      * @param  stat The Constant for the stat that you want to calculate
@@ -279,14 +291,6 @@ public class Pokemon
         {
             status[i] = false;
         }
-    }
-
-    public void applyMove(final Move m) {
-        for(final Stat s : Stat.values()) {
-            //TODO - loop through move effects and apply stat buffs/debuffs
-        }
-        //TODO - calculate effectiveness
-        this.inBattleStats[0] -= m.getPower(); //no idea if this is correct, jordan do this pls
     }
 
     @Override
