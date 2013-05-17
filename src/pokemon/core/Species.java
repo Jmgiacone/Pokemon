@@ -831,7 +831,7 @@ public enum Species
         MEWTWO("Mewtwo", "150", (short)3, new short[] {106, 110, 90, 154, 90, 130}, (byte)306, new byte[] {0, 0, 0, 3, 0, 0}, GenderRatio.GENDERLESS, ExperienceGroup.SLOW,convertToMap(new int[] {0, 0, 0, 8, 15, 22, 29, 36, 43, 50, 57, 57, 64, 71, 79, 86, 93, 100}, new Move[] {Move.CONFUSION, Move.DISABLE, Move.BARRIER, Move.SWIFT, Move.FUTURE_SIGHT, Move.PSYCH_UP, Move.MIRACLE_EYE, Move.MIST, Move.PSYCHO_CUT, Move.AMNESIA, Move.POWER_SWAP, Move.GUARD_SWAP, Move.PSYCHIC, Move.ME_FIRST, Move.RECOVER, Move.SAFEGUARD, Move.AURA_SPHERE, Move.PSYSTRIKE}), Type.PSYCHIC),
         MEW("Mew", "151", (short)45, new short[] {100, 100, 100, 100, 100, 100}, (byte)270, new byte[] {3, 0, 0, 0, 0, 0}, GenderRatio.GENDERLESS, ExperienceGroup.MEDIUM_SLOW,convertToMap(new int[] {0, 0, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100}, new Move[] {Move.POUND, Move.REFLECT_TYPE, Move.TRANSFORM, Move.MEGA_PUNCH, Move.METRONOME, Move.PSYCHIC, Move.BARRIER, Move.ANCIENTPOWER, Move.AMNESIA, Move.ME_FIRST, Move.BATON_PASS, Move.NASTY_PLOT, Move.AURA_SPHERE}), Type.PSYCHIC);
 
-        private final Map<Integer, Move> LEARNSET;
+        private final Map<Move, Integer> LEARNSET;
         private final ExperienceGroup EXP_GROUP;
         private final Species[] EVOLUTION;
         private final GenderRatio GENDER_RATIO;
@@ -842,7 +842,7 @@ public enum Species
         private final short CATCH_RATE;
 
         Generation1(final String name, final String dexNumber, final short catchRate, final short[] stats, byte expYield, byte[] evYield,
-                GenderRatio ratio, ExperienceGroup group,/*final Species[] evolvesTo,*/ Map<Integer, Move> learnset, final Type... type)
+                GenderRatio ratio, ExperienceGroup group,/*final Species[] evolvesTo,*/ Map<Move, Integer> learnset, final Type... type)
         {
             if(type.length > 2)
             {
@@ -1017,7 +1017,7 @@ public enum Species
         HO_OH("Ho-Oh", "250", (short)3, new short[] {106, 130, 90, 110, 154, 90}, (byte)306, new byte[] {0, 0, 0, 0, 3, 0}, GenderRatio.GENDERLESS, ExperienceGroup.SLOW,convertToMap(new int[] {0, 0, 9, 15, 23, 29, 37, 43, 50, 57, 65, 71, 79, 85, 93, 99}, new Move[] {Move.WHIRLWIND, Move.WEATHER_BALL, Move.GUST, Move.BRAVE_BIRD, Move.EXTRASENSORY, Move.SUNNY_DAY, Move.FIRE_BLAST, Move.SACRED_FIRE, Move.PUNISHMENT, Move.ANCIENTPOWER, Move.SAFEGUARD, Move.RECOVER, Move.FUTURE_SIGHT, Move.NATURAL_GIFT, Move.CALM_MIND, Move.SKY_ATTACK}), Type.FIRE, Type.FLYING),
         CELEBI("Celebi", "251", (short)45, new short[] {100, 100, 100, 100, 100, 100}, (byte)270, new byte[] {3, 0, 0, 0, 0, 0}, GenderRatio.GENDERLESS, ExperienceGroup.MEDIUM_SLOW,convertToMap(new int[] {0, 0, 0, 0, 10, 19, 28, 37, 46, 55, 64, 73, 82, 91}, new Move[] {Move.LEECH_SEED, Move.CONFUSION, Move.RECOVER, Move.HEAL_BELL, Move.SAFEGUARD, Move.MAGICAL_LEAF, Move.ANCIENTPOWER, Move.BATON_PASS, Move.NATURAL_GIFT, Move.HEAL_BLOCK, Move.FUTURE_SIGHT, Move.HEALING_WISH, Move.LEAF_STORM, Move.PERISH_SONG}), Type.PSYCHIC, Type.GRASS);
 
-        private final Map<Integer, Move> LEARNSET;
+        private final Map<Move, Integer> LEARNSET;
         private final ExperienceGroup EXP_GROUP;
         private final Species[] EVOLUTION;
         private final GenderRatio GENDER_RATIO;
@@ -1028,7 +1028,7 @@ public enum Species
         private final short CATCH_RATE;
 
         Generation2(final String name, final String dexNumber, final short catchRate, final short[] stats, byte expYield, byte[] evYield,
-                    GenderRatio ratio, ExperienceGroup group,/*final Species[] evolvesTo,*/ Map<Integer, Move> learnset, final Type... type)
+                    GenderRatio ratio, ExperienceGroup group,/*final Species[] evolvesTo,*/ Map<Move, Integer> learnset, final Type... type)
         {
             if(type.length > 2)
             {
@@ -1245,7 +1245,7 @@ public enum Species
         DEOXYS_SPEED("Deoxys", "386", (short)3, new short[] {50, 95, 90, 95, 90, 180}, (byte)270, new byte[] {0, 0, 0, 0, 0, 3}, GenderRatio.GENDERLESS, ExperienceGroup.SLOW,convertToMap(new int[] {0, 0, 9, 17, 25, 33, 41, 49, 57, 65, 73, 81, 89, 97}, new Move[] {Move.LEER, Move.WRAP, Move.NIGHT_SHADE, Move.TELEPORT, Move.KNOCK_OFF, Move.PURSUIT, Move.PSYCHIC, Move.SNATCH, Move.PSYCHO_SHIFT, Move.ZEN_HEADBUTT, Move.COSMIC_POWER, Move.RECOVER, Move.PSYCHO_BOOST, Move.HYPER_BEAM}), Type.PSYCHIC);
 
 
-        private final Map<Integer, Move> LEARNSET;
+        private final Map<Move, Integer> LEARNSET;
         private final ExperienceGroup EXP_GROUP;
         private final Species[] EVOLUTION;
         private final GenderRatio GENDER_RATIO;
@@ -1256,7 +1256,7 @@ public enum Species
         private final short CATCH_RATE;
 
         Generation3(final String name, final String dexNumber, final short catchRate, final short[] stats, byte expYield, byte[] evYield,
-                    GenderRatio ratio, ExperienceGroup group,/*final Species[] evolvesTo,*/ Map<Integer, Move> learnset, final Type... type)
+                    GenderRatio ratio, ExperienceGroup group,/*final Species[] evolvesTo,*/ Map<Move, Integer> learnset, final Type... type)
         {
             if(type.length > 2)
             {
@@ -1445,7 +1445,7 @@ public enum Species
         SHAYMIN_SKY("Shaymin", "492", (short)45, new short[] {100, 103, 75, 120, 75, 127}, (byte)270, new byte[] {0, 0, 0, 0, 0, 3}, GenderRatio.GENDERLESS, ExperienceGroup.MEDIUM_SLOW,convertToMap(new int[] {0, 10, 19, 28, 37, 46, 55, 64, 73, 82, 91, 100}, new Move[] {Move.GROWTH, Move.MAGICAL_LEAF, Move.LEECH_SEED, Move.SYNTHESIS, Move.SWEET_SCENT, Move.NATURAL_GIFT, Move.WORRY_SEED, Move.AROMATHERAPY, Move.ENERGY_BALL, Move.SWEET_KISS, Move.HEALING_WISH, Move.SEED_FLARE}), Type.GRASS, Type.FLYING),
         ARCEUS("Arceus", "493", (short)3, new short[] {120, 120, 120, 120, 120, 120}, (byte)324, new byte[] {3, 0, 0, 0, 0, 0}, GenderRatio.GENDERLESS, ExperienceGroup.SLOW,convertToMap(new int[] {0, 0, 0, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100}, new Move[] {Move.SEISMIC_TOSS, Move.COSMIC_POWER, Move.NATURAL_GIFT, Move.PUNISHMENT, Move.GRAVITY, Move.EARTH_POWER, Move.HYPER_VOICE, Move.EXTREMESPEED, Move.REFRESH, Move.FUTURE_SIGHT, Move.RECOVER, Move.HYPER_BEAM, Move.PERISH_SONG, Move.JUDGMENT}), Type.NORMAL);
 
-        private final Map<Integer, Move> LEARNSET;
+        private final Map<Move, Integer> LEARNSET;
         private final ExperienceGroup EXP_GROUP;
         private final Species[] EVOLUTION;
         private final GenderRatio GENDER_RATIO;
@@ -1456,7 +1456,7 @@ public enum Species
         private final short CATCH_RATE;
 
         Generation4(final String name, final String dexNumber, final short catchRate, final short[] stats, byte expYield, byte[] evYield,
-                    GenderRatio ratio, ExperienceGroup group,/*final Species[] evolvesTo,*/ Map<Integer, Move> learnset, final Type... type)
+                    GenderRatio ratio, ExperienceGroup group,/*final Species[] evolvesTo,*/ Map<Move, Integer> learnset, final Type... type)
         {
             if(type.length > 2)
             {
@@ -1695,7 +1695,7 @@ public enum Species
         MELOETTA_PIROUETTE("Meloetta", "648", (short)3, new short[] {100, 128, 90, 77, 77, 128}, (byte)270, new byte[] {0, 1, 1, 0, 0, 1}, GenderRatio.GENDERLESS, ExperienceGroup.SLOW,convertToMap(new int[] {0, 6, 11, 16, 21, 26, 31, 36, 43, 50, 57, 64, 71, 78, 85}, new Move[] {Move.ROUND, Move.QUICK_ATTACK, Move.CONFUSION, Move.SING, Move.TEETER_DANCE, Move.ACROBATICS, Move.PSYBEAM, Move.ECHOED_VOICE, Move.U_TURN, Move.WAKE_UP_SLAP, Move.PSYCHIC, Move.HYPER_VOICE, Move.ROLE_PLAY, Move.CLOSE_COMBAT, Move.PERISH_SONG}), Type.NORMAL, Type.FIGHTING),
         GENESECT("Genesect", "649", (short)3, new short[] {71, 120, 95, 120, 95, 99}, (byte)270, new byte[] {0, 1, 0, 1, 0, 1}, GenderRatio.GENDERLESS, ExperienceGroup.SLOW,convertToMap(new int[] {0, 0, 0, 0, 0, 7, 11, 18, 22, 29, 33, 40, 44, 51, 55, 62, 66, 73, 77}, new Move[] {Move.TECHNO_BLAST, Move.QUICK_ATTACK, Move.MAGNET_RISE, Move.METAL_CLAW, Move.SCREECH, Move.FURY_CUTTER, Move.LOCK_ON, Move.FLAME_CHARGE, Move.MAGNET_BOMB, Move.SLASH, Move.METAL_SOUND, Move.SIGNAL_BEAM, Move.TRI_ATTACK, Move.X_SCISSOR, Move.BUG_BUZZ, Move.SIMPLE_BEAM, Move.ZAP_CANNON, Move.HYPER_BEAM, Move.SELFDESTRUCT}), Type.BUG, Type.STEEL);
 
-        private final Map<Integer, Move> LEARNSET;
+        private final Map<Move, Integer> LEARNSET;
         private final ExperienceGroup EXP_GROUP;
         private final Species[] EVOLUTION;
         private final GenderRatio GENDER_RATIO;
@@ -1706,7 +1706,7 @@ public enum Species
         private final short CATCH_RATE;
 
         Generation5(final String name, final String dexNumber, final short catchRate, final short[] stats, byte expYield, byte[] evYield,
-                    GenderRatio ratio, ExperienceGroup group,/*final Species[] evolvesTo,*/ Map<Integer, Move> learnset, final Type... type)
+                    GenderRatio ratio, ExperienceGroup group,/*final Species[] evolvesTo,*/ Map<Move, Integer> learnset, final Type... type)
         {
             if(type.length > 2)
             {
@@ -1933,7 +1933,7 @@ public enum Species
         }
     }
 
-    private final Map<Integer, Move> LEARNSET;
+    private final Map<Move, Integer> LEARNSET;
     private final ExperienceGroup EXP_GROUP;
     private final Species[] EVOLUTION;
     private final GenderRatio GENDER_RATIO;
@@ -2019,7 +2019,7 @@ public enum Species
         return PREVOLUTION != null;
     }*/
 
-    public Map<Integer, Move> getLearnset()
+    public Map<Move, Integer> getLearnset()
     {
         return LEARNSET;
     }
@@ -2043,21 +2043,22 @@ public enum Species
         return contains(EVOLUTION, s);
     }
 
-    private static Map<Integer, Move> convertToMap(int[] a, Move[] b)
+    private static Map<Move, Integer> convertToMap(int[] a, Move[] b)
     {
+        //TODO Fix the Map problem THE RIGHT WAY
         if(a.length != b.length)
         {
             throw new IllegalArgumentException("a and b must be the same length");
         }
 
-        Map<Integer, Move> m = new TreeMap<>();
+        Map<Move, Integer> m = new TreeMap<>();
 
         for(int i = 0; i < a.length; i++)
         {
             //The -1 denotes a Move that isn't applicable for BW2. Thusly, it's ignored
             if(a[i] != -1)
             {
-                m.put(a[i], b[i]);
+                m.put(b[i], a[i]);
             }
         }
 
