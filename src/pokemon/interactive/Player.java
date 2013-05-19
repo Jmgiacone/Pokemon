@@ -1,6 +1,7 @@
 package pokemon.interactive;
 
 import pokemon.core.Pokemon;
+import pokemon.engine.Battle;
 
 import java.util.Arrays;
 import java.util.Map;
