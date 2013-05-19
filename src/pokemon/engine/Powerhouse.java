@@ -3,6 +3,7 @@ package pokemon.engine;
 import pokemon.core.Move;
 import pokemon.core.Pokemon;
 import pokemon.core.Species;
+import pokemon.core.Stat;
 import pokemon.interactive.Player;
 import pokemon.util.WildPokemonGenerator;
 
@@ -22,13 +23,14 @@ public class Powerhouse {
         Scanner in = new Scanner(System.in);
         final String[] starters = new String[] {"Charmander", "Bulbasaur", "Squirtle"};
         boolean isBattling = false;
+        Pokemon playerPokemon = null;
         print(Powerhouse.class.getSimpleName(), true);
         print("Please enter your players name: ", false); Player player = new Player(in.nextLine());
         print("Please type the name of the start pokemon you would like (Charmander, Bulbasaur, Squirtle): ", false);
         final String starter = in.nextLine();
         for(final Species s : Species.values()) {
             if(s.getName().equalsIgnoreCase(starter)) {
-                if(player.addToParty(new Pokemon(s))) {
+                if(player.addToParty(playerPokemon = new Pokemon(s))) {
                     print("Added a " + s.getName() + " to your party.", true);
                 }
             }
@@ -39,19 +41,22 @@ public class Powerhouse {
         } else {
             print("Player contents: \n" + player.toString(), true);
         }
-
         print("Would you like to battle?: ", false);
         isBattling = in.nextLine().equalsIgnoreCase("yes");
         player.setBattleState(isBattling);
         final Pokemon wild = WildPokemonGenerator.generatePokemon();
         System.out.println("Wild pokemon information: " + wild);
         print("You encountered a " + wild.getName() + "!", true);
-        print("Move set: " + Arrays.toString(player.getParty()[0].getMoveSet()) + ", type the name of the move you want to use.", true);
+        print("Move set: " + Arrays.toString(player.getParty()[0].getMoveSet()) + ", type the name of the move you want to use, <flee> to quit.", true);
         final Battle battle = new Battle(player, wild);
         while(battle.isRunning()) {
             Move moveSelected = null;
             while(moveSelected == null) {
                 final String moveParse = in.nextLine();
+                if(moveParse.equalsIgnoreCase("flee")) {
+                    battle.setRunning(false);
+                    break;
+                }
                 for(final Move m : player.getParty()[0].getMoveSet()) {
                     try {
                         if(m == Move.valueOf(moveParse.toUpperCase())) {
@@ -69,7 +74,14 @@ public class Powerhouse {
                 print(player.getParty()[0].getName() + " used " + moveSelected.getName() + "!", true);
                 break;
             }
-            print(wild.toString(), true);
+            if(battle.isRunning()) {
+                print("Oppenents HP: " + wild.getInBattleStat(Stat.HP), true);
+                moveSelected = wild.getMoveSet()[(int) Math.random() * wild.getMoveSet().length];
+                battle.useMove(moveSelected, false);
+                print(wild.getName() + " used " + moveSelected.getName(), true);
+                print(player.getParty()[0].getName() + "'s HP: " + player.getParty()[0].getInBattleStat(Stat.HP) + "", true);
+            }
+            moveSelected = null;
         }
     }
 
