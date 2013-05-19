@@ -21,9 +21,9 @@ public class Player {
     private Pokemon[] party;
 
     public Player(final String name) {
-        inBattle = false;
+        this.inBattle = false;
         this.money = 0;
-        NAME = name;
+        this.NAME = name;
         this.bag = new Bag();
         this.party = new Pokemon[6];
     }
