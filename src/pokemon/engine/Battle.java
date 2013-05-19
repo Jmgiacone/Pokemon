@@ -7,20 +7,24 @@ public class Battle
 {
     private Player p;
     private Pokemon wild;
-    private boolean battling;
+    private boolean running;
 
     public Battle(Player p, Pokemon wild)
     {
         this.p = p;
         this.wild = wild;
-        battling = true;
+        this.running = true;
     }
 
     public void useMove(final Move m, final boolean player) {
-        calculateDamage(player ? p.getParty()[0] : wild, m, player ? wild : p.getParty()[0]);
+        if(player) {
+            wild.setInBattleHp(wild.getInBattleHp() - calculateDamage(p.getParty()[0], m, wild));
+        } else {
+            p.getParty()[0].setInBattleHp(p.getParty()[0].getInBattleHp() - calculateDamage(wild, m, p.getParty()[0]));
+        }
     }
 
-    public/*ivate*/ short calculateDamage(Pokemon attacking, Move used, Pokemon defending)
+    public short calculateDamage(Pokemon attacking, Move used, Pokemon defending)
     {
         //http://bulbapedia.bulbagarden.net/wiki/Damage_modification#Damage_formula
         //http://www.smogon.com/bw/articles/bw_complete_damage_formula
@@ -45,7 +49,14 @@ public class Battle
                 (attack / (double)defense) * used.getPower() + 2) * modifiers(attacking, used, defending));
     }
 
-    public/*rivate*/ short modifiers(Pokemon attacking, Move used, Pokemon defending)
+    /**
+     * Finds the correct damage modifier for the move used based on the attacking and defending <code>Pokemon</code>'s characteristics.
+     * @param attacking
+     * @param used
+     * @param defending
+     * @return
+     */
+    public short modifiers(Pokemon attacking, Move used, Pokemon defending)
     {
         //http://bulbapedia.bulbagarden.net/wiki/Damage_modification#Damage_formula
         float stab = 1, typeEffectiveness = 1;
@@ -78,8 +89,19 @@ public class Battle
         return (short)(stab * typeEffectiveness * crit * ((byte)((Math.random() * 16) + 85) / 100.0));
     }
 
-    public boolean isRunning()
-    {
-        return battling;
+    /**
+     * Sets the running state of a battle.
+     * @param running <code>true</code> if you want to battle to be in a running state, <code>false</code> otherwise.
+     */
+    public void setRunning(final boolean running) {
+        this.running = running;
+    }
+
+    /**
+     * Checks to see whether or not a Battle is still running.
+     * @return <code>true</code> if its running, <code>false</code> otherwise.
+     */
+    public boolean isRunning() {
+        return running && (!(wild.getInBattleHp() <= 0) && !(p.getParty()[0].getInBattleHp() <= 0));
     }
 }
