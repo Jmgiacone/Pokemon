@@ -6,25 +6,116 @@ import pokemon.interactive.Player;
 public class Battle
 {
     private Player p;
-    private Pokemon wild;
+    private Pokemon opponent, player;
+    private byte pokemonSlot;
     private boolean running;
 
-    public Battle(Player p, Pokemon wild)
+    public Battle(Player p, Pokemon opponent)
     {
         this.p = p;
-        this.wild = wild;
+        this.opponent = opponent;
         this.running = true;
+        pokemonSlot = 0;
+        player = p.getParty()[pokemonSlot];
     }
 
-    public void useMove(final Move m, final boolean player) {
-        if(player) {
-            wild.setInBattleHp(wild.getInBattleHp() - calculateDamage(p.getParty()[0], m, wild));
-        } else {
-            p.getParty()[0].setInBattleHp(p.getParty()[0].getInBattleHp() - calculateDamage(wild, m, p.getParty()[0]));
+    private boolean containsMove(Move[] moves, Move m)
+    {
+        for(Move move : moves)
+        {
+            if(move == m)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public String useMove(final Move m)
+    {
+        if(!containsMove(player.getMoveSet(), m))
+        {
+            return player.getName() + " does not know how to use " + m.getName() + ".";
+        }
+
+        String str = "";
+        //TODO Make the randomization prioritize Supereffective moves
+         Move opponentMove = opponent.getMoveSet()[(byte)(Math.random() * opponent.getMoveSet().length)];
+
+        //short playerDamage = calculateDamage(player, m, opponent), opponentDamage = calculateDamage(opponent, opponentMove, player);
+        if(player.getInBattleStat(Stat.SPEED) >= opponent.getInBattleStat(Stat.SPEED))
+        {
+            //Player is faster OR the speeds are equal
+
+            return str + useMoveInOrder(player, m, opponent, opponentMove);
+        }
+        else
+        {
+            //Opponent is faster
+            return str + useMoveInOrder(opponent, opponentMove, player, m);
+
         }
     }
 
-    public short calculateDamage(Pokemon attacking, Move used, Pokemon defending)
+    private String useMoveInOrder(Pokemon first, Move firstMove, Pokemon second, Move secondMove)
+    {
+        String str = first.getName() + " used " + firstMove.getName() + "!";
+        short firstDamage = calculateDamage(first, firstMove, second), secondDamage = calculateDamage(second, secondMove, first);
+
+        if((byte)(Math.random() * 100) + 1 <= firstMove.getAccuracy())
+        {
+            str += "\n" + first.getName() + " deals " + firstDamage + " damage to " + second.getName() + "!";
+            second.takeDamage(firstDamage);
+        }
+        else
+        {
+            str += "\nbut it missed...";
+        }
+
+        if(second.isFainted())
+        {
+            str = "\n" + str + second.getName() + " fainted!";
+            if(first.equals(player))
+            {
+                str += "\n" + first.getName() + " gained " + calcExp(first, second) + " exp!";
+                first.addExp(calcExp(first, second));
+            }
+
+            return str;
+        }
+
+        str += "\n" + second.getName() + " used " + secondMove.getName() + "!";
+        if((byte)(Math.random() * 100) + 1 <= secondMove.getAccuracy())
+        {
+            str += "\n" + second.getName() + " deals " + secondDamage + " damage to " + first.getName() + "!";
+            first.takeDamage(secondDamage);
+        }
+        else
+        {
+            str += "\nbut it missed...";
+        }
+
+        if(first.isFainted())
+        {
+            str = "\n" + str + first.getName() + " fainted!";
+            if(second.equals(player))
+            {
+                str += "\n" + second.getName() + " gained " + calcExp(second, first) + " exp!";
+                second.addExp(calcExp(second, first));
+            }
+
+            return str;
+        }
+
+        return str;
+    }
+    private int calcExp(Pokemon victor, Pokemon loser)
+    {
+        return (int)(((loser.getExpYield() * loser.getLevel()) / 5.0) *
+                ((Math.pow(2 * loser.getLevel() + 10, 2.5) / Math.pow(loser.getLevel() + victor.getLevel() + 10, 2.5)) + 1));
+    }
+    private short calculateDamage(Pokemon attacking, Move used, Pokemon defending)
     {
         //http://bulbapedia.bulbagarden.net/wiki/Damage_modification#Damage_formula
         //http://www.smogon.com/bw/articles/bw_complete_damage_formula
@@ -56,7 +147,7 @@ public class Battle
      * @param defending
      * @return
      */
-    public short modifiers(Pokemon attacking, Move used, Pokemon defending)
+    private float modifiers(Pokemon attacking, Move used, Pokemon defending)
     {
         //http://bulbapedia.bulbagarden.net/wiki/Damage_modification#Damage_formula
         float stab = 1, typeEffectiveness = 1;
@@ -86,7 +177,7 @@ public class Battle
             }
         }
 
-        return (short)(stab * typeEffectiveness * crit * ((byte)((Math.random() * 16) + 85) / 100.0));
+        return (float)(stab * typeEffectiveness * crit * ((byte)((Math.random() * 16) + 85) / 100.0));
     }
 
     /**
@@ -102,6 +193,12 @@ public class Battle
      * @return <code>true</code> if its running, <code>false</code> otherwise.
      */
     public boolean isRunning() {
-        return running && (!(wild.getInBattleHp() <= 0) && !(p.getParty()[0].getInBattleHp() <= 0));
+        return running && (!(opponent.getInBattleHp() <= 0) && !(p.getParty()[0].getInBattleHp() <= 0));
+    }
+
+    @Override
+    public String toString()
+    {
+        return player + "\n" + opponent;
     }
 }
