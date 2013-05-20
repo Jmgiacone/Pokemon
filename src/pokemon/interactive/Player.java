@@ -44,8 +44,17 @@ public class Player {
         return this.bag;
     }
 
-    public Pokemon[] getParty() {
-        return this.party;
+    public Pokemon[] getParty()
+    {
+        byte count = (byte)party.length;
+        for(Pokemon p : party)
+        {
+            if(p == null)
+            {
+                count--;
+            }
+        }
+        return Arrays.copyOfRange(party, 0, count);
     }
 
     public void setBattleState(final boolean inBattle) {
@@ -53,12 +62,7 @@ public class Player {
     }
 
     public boolean isPartyEmpty() {
-        for(final Pokemon p : getParty()) {
-            if(p != null) {
-                return false;
-            }
-        }
-        return true;
+        return getParty().length == 0;
     }
 
     /**
