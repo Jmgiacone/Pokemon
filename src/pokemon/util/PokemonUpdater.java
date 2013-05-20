@@ -858,7 +858,7 @@ public class PokemonUpdater
                     "\", \"" + dexNum.get(i) +
                     "\", (short)" + catchRates.get(i) +
                     ", " +
-                    "new short[] {" + stats.get(i) + "}, (byte)" +
+                    "new short[] {" + stats.get(i) + "}, (short)" +
                     xpYields.get(i) + ", " +
                     "new byte[] {" + evYields.get(i) + "}, GenderRatio." +
                     genderRatios.get(i) + ", " +
