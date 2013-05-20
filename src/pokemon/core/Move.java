@@ -682,4 +682,10 @@ public enum Move
     {
         return ACCURACY;
     }
+
+    @Override
+    public String toString()
+    {
+        return NAME;
+    }
 }
