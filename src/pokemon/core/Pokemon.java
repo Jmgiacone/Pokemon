@@ -1,11 +1,13 @@
 package pokemon.core;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public class Pokemon
 {
     private String nickname;
     private Species species;
+    //private final String OT;
     private final Nature NATURE;
     private final Gender GENDER;
     private final byte[] IVS;
@@ -131,6 +133,26 @@ public class Pokemon
         totalExp = p.totalExp;
     }
 
+    public void takeDamage(int damage)
+    {
+        inBattleStats[(byte)Stat.HP.ordinal()] -= (short)damage;
+
+        if(inBattleStats[(byte)Stat.HP.ordinal()] < 0)
+        {
+            inBattleStats[(byte)Stat.HP.ordinal()] = 0;
+        }
+    }
+
+    public short getExpYield()
+    {
+        return species.getExpYield();
+    }
+
+    public boolean isFainted()
+    {
+        return inBattleStats[(byte)Stat.HP.ordinal()] <= 0;
+    }
+
     public boolean canLearnNewMove()
     {
         return species.getLearnset().containsKey(level);
@@ -156,7 +178,15 @@ public class Pokemon
 
     public Move[] getMoveSet()
     {
-        return moveSet;
+        byte count = (byte)moveSet.length;
+        for(Move m : moveSet)
+        {
+            if(m == null)
+            {
+                count--;
+            }
+        }
+        return Arrays.copyOfRange(moveSet, 0, count);
     }
     /**
      * Gets the Pokemon's Gender.
@@ -281,7 +311,7 @@ public class Pokemon
 
     public void revive()
     {
-        for(Move m : moveSet)
+        for(Move m : getMoveSet())
         {
             m.resetPP();
             m.resetAccuracy();
