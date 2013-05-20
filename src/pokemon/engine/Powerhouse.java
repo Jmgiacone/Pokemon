@@ -21,72 +21,149 @@ import java.util.Scanner;
 public class Powerhouse {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        final String[] starters = new String[] {"Charmander", "Bulbasaur", "Squirtle"};
-        boolean isBattling = false;
-        Pokemon playerPokemon = null;
-        print(Powerhouse.class.getSimpleName(), true);
-        print("Please enter your players name: ", false); Player player = new Player(in.nextLine());
-        print("Please type the name of the start pokemon you would like (Charmander, Bulbasaur, Squirtle): ", false);
-        final String starter = in.nextLine();
-        for(final Species s : Species.values()) {
-            if(s.getName().equalsIgnoreCase(starter)) {
-                if(player.addToParty(playerPokemon = new Pokemon(s))) {
-                    print("Added a " + s.getName() + " to your party.", true);
-                }
-            }
+        final String[][] starters = new String[][]{
+                {"Bulbasaur", "Charmander", "Squirtle"},
+                {"Chikorita", "Cyndaquil", "Totodile"},
+                {"Treecko", "Torchic", "Mudkip"},
+                {"Turtwig", "Chimchar", "Piplup"},
+                {"Snivy", "Tepig", "Oshawott"}};
+        final String[] regions = new String[] {"Kanto", "Johto", "Hoenn", "Sinnoh", "Unova"},
+        options = new String[] {"Battle", "Heal", "Quit"};
+        System.out.println("Welcome to the wonderful world of Pokemon! Our names are Professors Giacone and Hoffmann." +
+                "\nOur job is to ensure that you start smoothly on your very own Pokemon Journey!" +
+                "\nWe are very fortunate to have recently caught fresh starter from each region!" +
+                "\nThere are 5 different regions to choose from: Kanto, Johto, Hoenn, Sinnoh, and Unova" +
+                "\nYou may only choose a single starter Pokemon, so choose wisely.");
+        System.out.print("First things first. What's your name? ");
+        Player p = new Player(in.nextLine());
+        System.out.print("Secondly, let's choose a region. Choose between Kanto, Johto, Hoenn, Sinnoh, and Unova. ");
+
+        String choice = in.nextLine();
+        while(!contains(regions, choice))
+        {
+            System.out.println(choice + " isn't a valid region. Try again");
+            choice = in.nextLine();
         }
-        if(player.isPartyEmpty()) {
-            print("Failed to add pokemon to your party, you must choose one of the three starter pokemon.", true);
-            System.exit(0);
-        } else {
-            print("Player contents: \n" + player.toString(), true);
-        }
-        print("Would you like to battle?: ", false);
-        isBattling = in.nextLine().equalsIgnoreCase("yes");
-        player.setBattleState(isBattling);
-        final Pokemon wild = WildPokemonGenerator.generatePokemon();
-        System.out.println("Wild pokemon information: " + wild);
-        print("You encountered a " + wild.getName() + "!", true);
-        print("Move set: " + Arrays.toString(player.getParty()[0].getMoveSet()) + ", type the name of the move you want to use, <flee> to quit.", true);
-        final Battle battle = new Battle(player, wild);
-        while(battle.isRunning()) {
-            Move moveSelected = null;
-            while(moveSelected == null) {
-                final String moveParse = in.nextLine();
-                if(moveParse.equalsIgnoreCase("flee")) {
-                    battle.setRunning(false);
-                    break;
-                }
-                for(final Move m : player.getParty()[0].getMoveSet()) {
-                    try {
-                        if(m == Move.valueOf(moveParse.toUpperCase())) {
-                            moveSelected = m;
-                        }
-                    } catch(IllegalArgumentException e) {
-                        //lol trolled
-                    }
-                }
-                if(moveSelected == null) {
-                    print("Move not recognized. Enter a valid move", true);
-                    continue;
-                }
-                battle.useMove(moveSelected, true);
-                print(player.getParty()[0].getName() + " used " + moveSelected.getName() + "!", true);
+
+        byte index;
+
+        switch(choice.toUpperCase())
+        {
+            case "KANTO":
+                index = 0;
                 break;
-            }
-            if(battle.isRunning()) {
-                print("Oppenents HP: " + wild.getInBattleStat(Stat.HP), true);
-                moveSelected = wild.getMoveSet()[(int) Math.random() * wild.getMoveSet().length];
-                battle.useMove(moveSelected, false);
-                print(wild.getName() + " used " + moveSelected.getName(), true);
-                print(player.getParty()[0].getName() + "'s HP: " + player.getParty()[0].getInBattleStat(Stat.HP) + "", true);
-            }
-            moveSelected = null;
+            case "JOHTO":
+                index = 1;
+                break;
+            case "HOENN":
+                index  = 2;
+                break;
+            case "SINNOH":
+                index = 3;
+                break;
+            case "UNOVA":
+                index = 4;
+                break;
+            default:
+                throw new IllegalArgumentException(choice + " somehow bypassed the region check");
         }
+
+        System.out.println("Great! You chose the " + choice + " region!" +
+                "\nThe " + choice + " region has " + Arrays.toString(starters[index]) + " to choose from!" +
+                "\nTake your pick!");
+        choice = in.nextLine();
+
+        while(!contains(starters[index], choice))
+        {
+            System.out.println(choice + " is not a starter in this region. The starters are: " + Arrays.toString(starters[index]) + ". Please try again");
+            choice  = in.nextLine();
+        }
+
+        System.out.println("Congratulations on choosing a " + choice + "!" +
+                "\nTake good care of it and have fun on your very own Pokemon journey!");
+
+        p.addToParty(new Pokemon(Species.valueOf(choice.toUpperCase().replace(" ", "_"))));
+
+        boolean quit = false;
+
+        while(!quit)
+        {
+            do
+            {
+                System.out.println(p.getParty()[0] + "\nWhat would you like to do?" +
+                        "\n" + Arrays.toString(options));
+                choice = in.nextLine();
+            }
+            while(!contains(options, choice));
+
+            switch(choice.toUpperCase())
+            {
+                case "BATTLE":
+                    battle(p);
+                    break;
+                case "HEAL":
+                    healParty(p);
+                    break;
+                case "QUIT":
+                    quit = true;
+                    break;
+                default:
+                    throw new IllegalArgumentException(choice + " isn't a choice!");
+            }
+        }
+
+        System.out.println("\nThanks for playing! We hope to see you again!");
     }
 
-    public static void print(final String message, final boolean nextLine) {
-        if(nextLine) { System.out.println(message); }
-        else { System.out.print(message); }
+    private static void healParty(Player player)
+    {
+        for(Pokemon p : player.getParty())
+        {
+            p.revive();
+        }
+    }
+    private static void battle(Player player)
+    {
+        Scanner in  = new Scanner(System.in);
+        Pokemon wild = WildPokemonGenerator.generatePokemon();
+
+        System.out.println("Encountered a wild " + wild + "!");
+
+        Battle battle = new Battle(player, wild);
+
+        while(battle.isRunning())
+        {
+            System.out.println(battle);
+            System.out.println("Move set: " + Arrays.toString(player.getParty()[0].getMoveSet()) + ", type the name of the move you want to use, <Run> to run away.");
+            String choice = in.nextLine();
+
+            if(choice.equalsIgnoreCase("Run"))
+            {
+                //TODO Implement the running away formula
+                System.out.println("Got away successfully!");
+                break;
+            }
+
+            try
+            {
+                System.out.println(battle.useMove(Move.valueOf(choice.toUpperCase().replace(" ", "_"))));
+            }
+            catch(Exception e)
+            {
+                System.out.println(choice + " is not a valid move");
+            }
+        }
+    }
+    private static boolean contains(String[] list, String elt)
+    {
+        for(String s : list)
+        {
+            if(s.equalsIgnoreCase(elt))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
