@@ -5,6 +5,7 @@ import pokemon.core.Pokemon;
 import pokemon.core.Species;
 import pokemon.core.Stat;
 import pokemon.interactive.Player;
+import pokemon.interactive.Pokecenter;
 import pokemon.util.WildPokemonGenerator;
 
 import java.util.Arrays;
@@ -31,12 +32,12 @@ public class Powerhouse {
         options = new String[] {"Battle", "Heal", "Quit"};
         System.out.println("Welcome to the wonderful world of Pokemon! Our names are Professors Giacone and Hoffmann." +
                 "\nOur job is to ensure that you start smoothly on your very own Pokemon Journey!" +
-                "\nWe are very fortunate to have recently caught fresh starter from each region!" +
-                "\nThere are 5 different regions to choose from: Kanto, Johto, Hoenn, Sinnoh, and Unova" +
+                "\nWe are very fortunate to have recently caught fresh starter Pokemon from each region!" +
+                "\nThere are 5 different regions to choose from: Kanto, Johto, Hoenn, Sinnoh, and Unova." +
                 "\nYou may only choose a single starter Pokemon, so choose wisely.");
         System.out.print("First things first. What's your name? ");
         Player p = new Player(in.nextLine());
-        System.out.print("Secondly, let's choose a region. Choose between Kanto, Johto, Hoenn, Sinnoh, and Unova. ");
+        System.out.print("Okay " + p.getName() + ", let's choose a region. Choose between Kanto, Johto, Hoenn, Sinnoh, and Unova. ");
 
         String choice = in.nextLine();
         while(!contains(regions, choice))
@@ -102,7 +103,7 @@ public class Powerhouse {
                     battle(p);
                     break;
                 case "HEAL":
-                    healParty(p);
+                    Pokecenter.healParty(p);
                     break;
                 case "QUIT":
                     quit = true;
@@ -115,21 +116,14 @@ public class Powerhouse {
         System.out.println("\nThanks for playing! We hope to see you again!");
     }
 
-    private static void healParty(Player player)
-    {
-        for(Pokemon p : player.getParty())
-        {
-            p.revive();
-        }
-    }
     private static void battle(Player player)
     {
         Scanner in  = new Scanner(System.in);
-        Pokemon wild = WildPokemonGenerator.generatePokemon();
+        final Pokemon wild = WildPokemonGenerator.generatePokemon();
 
         System.out.println("Encountered a wild " + wild + "!");
 
-        Battle battle = new Battle(player, wild);
+        final Battle battle = new Battle(player, wild);
 
         while(battle.isRunning())
         {
@@ -150,10 +144,12 @@ public class Powerhouse {
             }
             catch(Exception e)
             {
-                System.out.println(choice + " is not a valid move");
+                System.err.println(choice + " is not a valid move");
+                e.printStackTrace();
             }
         }
     }
+
     private static boolean contains(String[] list, String elt)
     {
         for(String s : list)
