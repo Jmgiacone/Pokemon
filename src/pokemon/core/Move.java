@@ -686,6 +686,6 @@ public enum Move
     @Override
     public String toString()
     {
-        return NAME;
+        return NAME + "(" + TYPE + ", " + POWER + ", " + ACCURACY + ", (" + getCurrentPP() + " / " + getTotalPP() + ")";
     }
 }
