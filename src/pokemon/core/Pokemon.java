@@ -133,6 +133,10 @@ public class Pokemon
         totalExp = p.totalExp;
     }
 
+    public boolean[] getStatus() {
+        return status;
+    }
+
     public void takeDamage(int damage)
     {
         inBattleStats[(byte)Stat.HP.ordinal()] -= (short)damage;
