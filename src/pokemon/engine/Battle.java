@@ -67,6 +67,21 @@ public class Battle
         {
             str += "\n" + first.getName() + " deals " + firstDamage + " damage to " + second.getName() + "!";
             second.takeDamage(firstDamage);
+
+            float f = typeEffectiveness(second, firstMove);
+
+            if(f == 0)
+            {
+                str += "\nIt has no effect on " + second.getName() + ".";
+            }
+            else if(f < 1)
+            {
+                str += "\nIt's not very effective";
+            }
+            else if(f > 1)
+            {
+                str += "\nIt's Super Effective!";
+            }
         }
         else
         {
@@ -75,14 +90,22 @@ public class Battle
 
         if(second.isFainted())
         {
-            str = "\n" + str + second.getName() + " fainted!";
+            str = str + "\n" + second.getName() + " fainted!";
             if(first.equals(player))
             {
                 str += "\n" + first.getName() + " gained " + calcExp(first, second) + " exp!";
+
                 first.addExp(calcExp(first, second));
+
+                str += "\n" + first.levelUp();
+            }
+            else
+            {
+                running = false;
+                second.revive();
             }
 
-            return str;
+            return str + "\n";
         }
 
         str += "\n" + second.getName() + " used " + secondMove.getName() + "!";
@@ -90,6 +113,21 @@ public class Battle
         {
             str += "\n" + second.getName() + " deals " + secondDamage + " damage to " + first.getName() + "!";
             first.takeDamage(secondDamage);
+
+            float f = typeEffectiveness(first, secondMove);
+
+            if(f == 0)
+            {
+                str += "\nIt has no effect on " + first.getName() + ".";
+            }
+            else if(f < 1)
+            {
+                str += "\nIt's not very effective";
+            }
+            else if(f > 1)
+            {
+                str += "\nIt's Super Effective!";
+            }
         }
         else
         {
@@ -98,17 +136,24 @@ public class Battle
 
         if(first.isFainted())
         {
-            str = "\n" + str + first.getName() + " fainted!";
+            str = str + "\n" + first.getName() + " fainted!";
             if(second.equals(player))
             {
-                str += "\n" + second.getName() + " gained " + calcExp(second, first) + " exp!";
+                str += "\n\n" + second.getName() + " gained " + calcExp(second, first) + " exp!";
                 second.addExp(calcExp(second, first));
+
+                str += "\n" + second.levelUp();
+            }
+            else
+            {
+                running  = false;
+                first.revive();
             }
 
-            return str;
+            return str + "\n";
         }
 
-        return str;
+        return str + "\n";
     }
     private int calcExp(Pokemon victor, Pokemon loser)
     {
@@ -140,26 +185,9 @@ public class Battle
                 (attack / (double)defense) * used.getPower() + 2) * modifiers(attacking, used, defending));
     }
 
-    /**
-     * Finds the correct damage modifier for the move used based on the attacking and defending <code>Pokemon</code>'s characteristics.
-     * @param attacking
-     * @param used
-     * @param defending
-     * @return
-     */
-    private float modifiers(Pokemon attacking, Move used, Pokemon defending)
+    private float typeEffectiveness(Pokemon defending, Move used)
     {
-        //http://bulbapedia.bulbagarden.net/wiki/Damage_modification#Damage_formula
-        float stab = 1, typeEffectiveness = 1;
-        byte crit = (byte)(Math.random() * 10000 < 625 ? 2 : 1);
-
-        for(Type t : attacking.getType())
-        {
-            if(t == used.getType())
-            {
-                stab = (float)1.5;
-            }
-        }
+        float typeEffectiveness = 1;
 
         for(Type t : defending.getType())
         {
@@ -177,7 +205,30 @@ public class Battle
             }
         }
 
-        return (float)(stab * typeEffectiveness * crit * ((byte)((Math.random() * 16) + 85) / 100.0));
+        return typeEffectiveness;
+    }
+    /**
+     * Finds the correct damage modifier for the move used based on the attacking and defending <code>Pokemon</code>'s characteristics.
+     * @param attacking
+     * @param used
+     * @param defending
+     * @return
+     */
+    private float modifiers(Pokemon attacking, Move used, Pokemon defending)
+    {
+        //http://bulbapedia.bulbagarden.net/wiki/Damage_modification#Damage_formula
+        float stab = 1;
+        byte crit = (byte)(Math.random() * 10000 < 625 ? 2 : 1);
+
+        for(Type t : attacking.getType())
+        {
+            if(t == used.getType())
+            {
+                stab = (float)1.5;
+            }
+        }
+
+        return (float)(stab * typeEffectiveness(defending, used) * crit * ((byte)((Math.random() * 16) + 85) / 100.0));
     }
 
     /**
