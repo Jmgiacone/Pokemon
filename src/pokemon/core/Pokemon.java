@@ -309,6 +309,38 @@ public class Pokemon
         totalExp += newExp;
     }
 
+    public String levelUp()
+    {
+        String str = "";
+        if(totalExp >= totalExpForNextLevel)
+        {
+            level++;
+            totalExpForNextLevel = species.calculateExp(level + 1);
+
+            System.arraycopy(currentStats, 0, inBattleStats, 0, currentStats.length);
+
+            currentStats = new short[]{
+                    calculateStat(Stat.HP),
+                    calculateStat(Stat.ATTACK),
+                    calculateStat(Stat.DEFENSE),
+                    calculateStat(Stat.SP_ATTACK),
+                    calculateStat(Stat.SP_DEFENSE),
+                    calculateStat(Stat.SPEED)};
+            str += species.getName() + " grew to level " + level + "!";
+
+            for(Stat s : Stat.values())
+            {
+                str += "\n" + s + ": +" + (currentStats[s.ordinal()] - inBattleStats[s.ordinal()]);
+            }
+
+            revive();
+
+            return "\n" + str;
+        }
+
+        return "Too bad, " + species.getName() + " didn't level up. They need " + (totalExpForNextLevel - totalExp) + " more exp to reach level " + (level + 1) + ".";
+    }
+
     public void revive()
     {
         for(Move m : getMoveSet())
