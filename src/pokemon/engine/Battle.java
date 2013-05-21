@@ -10,6 +10,11 @@ public class Battle
     private byte pokemonSlot;
     private boolean running;
 
+    /**
+     * Creates a Battle object.
+     * @param p <code>Player</code> participating in the <code>Battle</code>.
+     * @param opponent <code>Pokemon</code> battling against the <code>Player</code>.
+     */
     public Battle(Player p, Pokemon opponent)
     {
         this.p = p;
@@ -19,6 +24,12 @@ public class Battle
         player = p.getParty()[pokemonSlot];
     }
 
+    /**
+     * Checks to see if an array of <code>Move</code>'s contains a certain <code>Move</code>.
+     * @param moves
+     * @param m
+     * @return
+     */
     private boolean containsMove(Move[] moves, Move m)
     {
         for(Move move : moves)
@@ -32,8 +43,14 @@ public class Battle
         return false;
     }
 
+    /**
+     * Uses
+     * @param m
+     * @return
+     */
     public String useMove(final Move m)
     {
+        //If the moveSet doesn't have the move passed in, don't use the move
         if(!containsMove(player.getMoveSet(), m))
         {
             return player.getName() + " does not know how to use " + m.getName() + ".";
@@ -41,13 +58,12 @@ public class Battle
 
         String str = "";
         //TODO Make the randomization prioritize Supereffective moves
-         Move opponentMove = opponent.getMoveSet()[(byte)(Math.random() * opponent.getMoveSet().length)];
+        Move opponentMove = opponent.getMoveSet()[(byte)(Math.random() * opponent.getMoveSet().length)];
 
         //short playerDamage = calculateDamage(player, m, opponent), opponentDamage = calculateDamage(opponent, opponentMove, player);
         if(player.getInBattleStat(Stat.SPEED) >= opponent.getInBattleStat(Stat.SPEED))
         {
             //Player is faster OR the speeds are equal
-
             return str + useMoveInOrder(player, m, opponent, opponentMove);
         }
         else
