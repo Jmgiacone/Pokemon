@@ -623,6 +623,10 @@ public enum Move
         STAT_LOWERED = stat;
     }*/
 
+    public Status getStatusEffect() {
+        return SIDE_EFFECT;
+    }
+
     public MoveType getMoveType()
     {
         return MOVE_TYPE;
