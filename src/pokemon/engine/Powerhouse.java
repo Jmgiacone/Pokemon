@@ -127,7 +127,7 @@ public class Powerhouse {
         Scanner in  = new Scanner(System.in);
         Pokemon wild = WildPokemonGenerator.generatePokemon();
 
-        System.out.println("Encountered a wild " + wild + "!");
+        System.out.println("Encountered a wild " + wild.getName() + "!");
 
         Battle battle = new Battle(player, wild);
 
@@ -140,7 +140,7 @@ public class Powerhouse {
             if(choice.equalsIgnoreCase("Run"))
             {
                 //TODO Implement the running away formula
-                System.out.println("Got away successfully!");
+                System.out.println("Got away safely!\n");
                 break;
             }
 
