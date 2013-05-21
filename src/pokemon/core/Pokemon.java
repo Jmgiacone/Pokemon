@@ -296,10 +296,6 @@ public class Pokemon
         return inBattleStats[(byte)Stat.HP.ordinal()];
     }
 
-    public void setInBattleHp(final int hp) {
-        inBattleStats[0] = (short) hp;
-    }
-
     /**
      * This is how the Pokemon gains totalExperience.
      * @param newExp the totalExp to be added.
@@ -312,13 +308,16 @@ public class Pokemon
     public String levelUp()
     {
         String str = "";
+        //If we have enough exp
         if(totalExp >= totalExpForNextLevel)
         {
+            //level up and set remaining exp
             level++;
             totalExpForNextLevel = species.calculateExp(level + 1);
 
             System.arraycopy(currentStats, 0, inBattleStats, 0, currentStats.length);
 
+            //
             currentStats = new short[]{
                     calculateStat(Stat.HP),
                     calculateStat(Stat.ATTACK),
