@@ -44,13 +44,10 @@ public class Player {
         return this.bag;
     }
 
-    public Pokemon[] getParty()
-    {
+    public Pokemon[] getParty(){
         byte count = (byte)party.length;
-        for(Pokemon p : party)
-        {
-            if(p == null)
-            {
+        for(Pokemon p : party) {
+            if(p == null){
                 count--;
             }
         }
@@ -70,10 +67,8 @@ public class Player {
      * @param pokemon <code>Pokemon</code> to add to the party.
      * @return <code>true</code> if the pokemon was added, <code>false</code> otherwise.
      */
-    public boolean addToParty(final Pokemon pokemon)
-    {
-        for(int i = 0; i < party.length; i++)
-        {
+    public boolean addToParty(final Pokemon pokemon) {
+        for(int i = 0; i < party.length; i++) {
             if(party[i] == null) {
                 party[i] = pokemon;
                 return true;
