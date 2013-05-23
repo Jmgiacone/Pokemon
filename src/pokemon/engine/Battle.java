@@ -57,18 +57,16 @@ public class Battle {
         if(!containsMove(player.getMoveSet(), m)) {
             return player.getName() + " does not know how to use " + m.getName() + ".";
         }
-
-        String str = "";
         //TODO Make the randomization prioritize Supereffective moves
         Move opponentMove = opponent.getMoveSet()[(byte)(Math.random() * opponent.getMoveSet().length)];
 
         //short playerDamage = calculateDamage(player, m, opponent), opponentDamage = calculateDamage(opponent, opponentMove, player);
         if(player.getInBattleStat(Stat.SPEED) >= opponent.getInBattleStat(Stat.SPEED)) {
             //Player is faster OR the speeds are equal
-            return str + useMoveInOrder(player, m, opponent, opponentMove);
+            return useMoveInOrder(player, m, opponent, opponentMove);
         } else {
             //Opponent is faster
-            return str + useMoveInOrder(opponent, opponentMove, player, m);
+            return useMoveInOrder(opponent, opponentMove, player, m);
 
         }
     }
